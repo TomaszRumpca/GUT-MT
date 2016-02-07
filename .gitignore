@@ -1,5 +1,12 @@
 *.class
 
+# IDE specific files
+.idea/
+*.iml
+
+# generated files
+target/
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 

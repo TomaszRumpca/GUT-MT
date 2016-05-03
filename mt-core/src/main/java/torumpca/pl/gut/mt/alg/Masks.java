@@ -38,4 +38,21 @@ public class Masks {
 
         return mask;
     }
+
+    public static boolean[][] getFakeMask(WindForecastModel dsm){
+
+        final int rows = dsm.getLatDataCount();
+        final int columns = dsm.getLonDataCount();
+
+        final boolean[][] mask = new boolean[rows][columns];
+
+        for (int i = 0; i < rows; i++){
+            for (int j = 0; j < columns ; j++){
+                mask[i][j] = true;
+            }
+        }
+
+        return mask;
+    }
+
 }

@@ -1,6 +1,8 @@
 package torumpca.pl.gut.mt.dsm.model;
 
-import java.awt.*;
+import torumpca.pl.gut.mt.error.DataNotAvailableException;
+
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 
 /**
@@ -108,12 +110,18 @@ public class WindForecastModel {
         this.lonDataCount = lonDataCount;
     }
 
-    public Point getPointFromLatLon(LatLon coordinates) {
+    public Point getPointFromLatLon(LatLon coordinates) throws DataNotAvailableException {
         final Point point = new Point();
         point.x = (int)((coordinates.latitude - getLeftBottomLatCoordinate())
                 / getLatStep());
         point.y = (int)((coordinates.longitude - getLeftBottomLonCoordinate())
                 / getLonStep());
+
+        if (point.x < 0 || point.x > getLonDataCount() || point.y < 0
+                || point.y > getLatDataCount()) {
+            throw new DataNotAvailableException(MessageFormat
+                    .format("Forecast does not contain data for location {0}", coordinates));
+        }
         return point;
     }
 

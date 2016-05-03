@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import torumpca.pl.gut.mt.Util;
 import torumpca.pl.gut.mt.dsm.model.*;
+import torumpca.pl.gut.mt.error.DataNotAvailableException;
 
-import java.awt.*;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -24,6 +24,7 @@ public class AStarResolver implements ProblemResolver {
 
     private static Logger LOG = LoggerFactory.getLogger(AStarResolver.class);
 
+    public static final String DEGREES = "\u00b0";
     static boolean[][] mask;
 
     public static Collection<Point> validLocationsFrom(Point loc) {
@@ -50,6 +51,12 @@ public class AStarResolver implements ProblemResolver {
     }
 
     private Solution getSolution(Algorithm.SearchResult result) {
+        //TODO implement getSolution from result
+        return null;
+    }
+
+    private Solution getSolution(Throwable throwable){
+        //TODO implement getSolution from error
         return null;
     }
 
@@ -58,17 +65,23 @@ public class AStarResolver implements ProblemResolver {
         LOG.info("Start determining the solution using A* algorithm");
         LOG.info("User input: {}", input);
 
-        //        Point origin = forecast.getPointFromLatLon(input.getOriginLat(),
-        //                input.getOriginLon());
-        //        Point goal = forecast.getPointFromLatLon(input.getGoalLat(), input.getGoalLon());
-        //
         final Ship ship = input.getShip();
-        Point origin = new Point(0, 2);
-        Point goal = new Point(3, 0);
+        final LatLon originCoordinates = new LatLon(input.getOriginLat(), input.getOriginLon());
+        final LatLon goalCoordinates = new LatLon(input.getGoalLat(), input.getGoalLon());
+        final Point origin, goal;
+        try {
+            origin = forecast.getPointFromLatLon(originCoordinates);
+            goal = forecast.getPointFromLatLon(goalCoordinates);
+        } catch (DataNotAvailableException e) {
+            LOG.error("Could not resolve starting point and target", e);
+            return getSolution(e);
+        }
+
         final LatLon goalLocation = forecast.getLatLonFromPoint(goal);
 
         final VectorComponents[][] forecastData = forecast.getForecastData();
-        mask = Masks.generateSimpleMask(forecast);
+        //mask = Masks.generateSimpleMask(forecast);
+        mask = Masks.getFakeMask(forecast);
 
         SearchProblem problemDef =
                 ProblemBuilder.create().initialState(origin).defineProblemWithoutActions()
@@ -100,22 +113,29 @@ public class AStarResolver implements ProblemResolver {
                         final double rotationAngle = -(normalizedAzimuth - Math.PI / 2);
                         final VectorComponents normalizedWindComponents =
                                 Util.rotateVector(rotationAngle, wind);
-
-                        return ship.calculateTravelCost(distance, normalizedWindComponents);
+                        LOG.debug("COST - normAzimuth {}{}, rotation {}{}, norm wind components {}, origin wind {}",
+                                Math.toDegrees(normalizedAzimuth),DEGREES, Math.toDegrees(rotationAngle), DEGREES, normalizedWindComponents, wind);
+                        final Double cost =
+                                ship.calculateTravelCost(distance, normalizedWindComponents);
+                        LOG.debug("COST - from {} to {} cost {}", source, destination, cost);
+                        return cost;
                     }
                 }).useHeuristicFunction(new HeuristicFunction<Point, Double>() {
                     @Override
                     public Double estimate(Point state) {
                         final LatLon currentLocation = forecast.getLatLonFromPoint(state);
                         final double distance = Util.getDistance(currentLocation, goalLocation);
-                        return distance / ship.getAverageSpeedInMpS() * ship
+                        final Double estimatedCost = distance / ship.getAverageSpeedInMpS() * ship
                                 .getAverageCostOfHourOnSea() / 3600;
+                        LOG.debug("HEURISTIC - from {} to target in {} estimated cost {} distance {}",
+                                state, goal, estimatedCost, distance);
+                        return estimatedCost;
                     }
                 }).build();
 
         Algorithm.SearchResult result = Hipster.createAStar(problemDef).search(goal);
 
-        LOG.info("Result: {}", result);
+        LOG.info("Result: \n{}", result);
 
         return getSolution(result);
     }

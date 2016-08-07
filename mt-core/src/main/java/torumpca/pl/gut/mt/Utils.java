@@ -6,7 +6,7 @@ import torumpca.pl.gut.mt.dsm.model.VectorComponents;
 /**
  * Created by Tomasz Rumpca on 2016-04-23.
  */
-public class Util {
+public class Utils {
 
     /**
      * Wyznacza azymut z punktu 'from' do celu w punkcie 'to'
@@ -29,7 +29,7 @@ public class Util {
 
     /**
      * Obraca wektor wejściowy o kąt teta przeciwnie do kierunku wskazówek zegara
-     * @param theta kąt obrotu w radianach
+     * @param theta kąt obrotu w radianach2
      * @param vector wektor wejściowy
      * @return wektor obrócony o zadany kąt teta
      */

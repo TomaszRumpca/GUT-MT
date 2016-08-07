@@ -8,19 +8,21 @@ import torumpca.pl.gut.mt.ship.SampleShip;
 public class UserData {
     //TODO implement all methods
     public double getOriginLat() {
-        return 0;
+        return 48.802824;
     }
 
     public double getGoalLat() {
-        return 0;
+        return 48.952824;
+//        return 52.952824;
     }
 
     public double getGoalLon() {
-        return 0;
+        return 13.386774;
+//        return 15.386774;
     }
 
     public double getOriginLon() {
-        return 0;
+        return 13.236774;
     }
 
     public Ship getShip() {

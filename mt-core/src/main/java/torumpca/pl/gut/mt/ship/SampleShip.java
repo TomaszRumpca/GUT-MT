@@ -1,6 +1,6 @@
 package torumpca.pl.gut.mt.ship;
 
-import torumpca.pl.gut.mt.Util;
+import torumpca.pl.gut.mt.Utils;
 import torumpca.pl.gut.mt.dsm.model.Ship;
 import torumpca.pl.gut.mt.dsm.model.VectorComponents;
 
@@ -22,7 +22,7 @@ public class SampleShip implements Ship {
     }
 
     public double getAverageSpeedInMpS(){
-        return Util.knotsToMetersPerSecond(getMaxSideWindSpeed());
+        return Utils.knotsToMetersPerSecond(getMaxSideWindSpeed());
     }
     public float getMaxWindSpeed() {
         return 30f;
@@ -46,13 +46,13 @@ public class SampleShip implements Ship {
             return Double.MAX_VALUE;
         }
         final double windSpeed = Math.sqrt(sideWind*sideWind + backWind*backWind);
-        final double windMaxSpeedInMpS = Util.knotsToMetersPerSecond(getMaxWindSpeed());
+        final double windMaxSpeedInMpS = Utils.knotsToMetersPerSecond(getMaxWindSpeed());
         if (windSpeed >= windMaxSpeedInMpS){
             return Double.MAX_VALUE;
         }
 
         final double windPercentageDeps = backWind/windMaxSpeedInMpS;
-        final double avgSpeedInMpS = Util.knotsToMetersPerSecond(getAverageSpeed());
+        final double avgSpeedInMpS = Utils.knotsToMetersPerSecond(getAverageSpeed());
         final double travelTimeInSeconds = distance / avgSpeedInMpS;
 
         final double maxWindDeps = 0.3d;

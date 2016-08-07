@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by Tomasz Rumpca on 2016-04-24.
  */
-public class UtilTest {
+public class UtilsTest {
 
 
     @Test
@@ -20,8 +20,8 @@ public class UtilTest {
         final LatLon target = new LatLon(54d, 19d);
 
         //when
-        final double distance0 = Util.getDistance(origin,origin);
-        final double distanceToTarget = Util.getDistance(origin,target);
+        final double distance0 = Utils.getDistance(origin,origin);
+        final double distanceToTarget = Utils.getDistance(origin,target);
 
         //then
         assertEquals(0d, distance0, 0.000001d);
@@ -36,7 +36,7 @@ public class UtilTest {
         final double speedInKnots = 1;
 
         //when
-        final double speedInMpS = Util.knotsToMetersPerSecond(speedInKnots);
+        final double speedInMpS = Utils.knotsToMetersPerSecond(speedInKnots);
 
         //then
         assertEquals(0.514444D, speedInMpS, 0.000001d);
@@ -52,10 +52,10 @@ public class UtilTest {
         final LatLon toWest = new LatLon(54.000d,17.000d);
 
         //when
-        final double angleToNorth = (Math.toDegrees(Util.getAzimuth(from,toNorth)) + 360 ) % 360;
-        final double angleToEast = (Math.toDegrees(Util.getAzimuth(from,toEast)) + 360 ) % 360;
-        final double angleToSouth = (Math.toDegrees(Util.getAzimuth(from,toSouth)) + 360 ) % 360;
-        final double angleToWest = (Math.toDegrees(Util.getAzimuth(from,toWest)) + 360 ) % 360;
+        final double angleToNorth = (Math.toDegrees(Utils.getAzimuth(from,toNorth)) + 360 ) % 360;
+        final double angleToEast = (Math.toDegrees(Utils.getAzimuth(from,toEast)) + 360 ) % 360;
+        final double angleToSouth = (Math.toDegrees(Utils.getAzimuth(from,toSouth)) + 360 ) % 360;
+        final double angleToWest = (Math.toDegrees(Utils.getAzimuth(from,toWest)) + 360 ) % 360;
 
         //then
         assertEquals(0, angleToNorth, 1d);
@@ -75,10 +75,10 @@ public class UtilTest {
         final LatLon toWest = new LatLon(54.000d,17.000d);
 
         //when
-        final double angleToNorth = (Util.getAzimuth(from,toNorth) + 2*Math.PI ) % 2*Math.PI;
-        final double angleToEast = (Util.getAzimuth(from,toEast) + 2*Math.PI ) % 2*Math.PI;
-        final double angleToSouth = (Util.getAzimuth(from,toSouth) + 2*Math.PI ) % 2*Math.PI;
-        final double angleToWest = (Util.getAzimuth(from,toWest) + 2*Math.PI ) % 2*Math.PI;
+        final double angleToNorth = (Utils.getAzimuth(from,toNorth) + 2*Math.PI ) % 2*Math.PI;
+        final double angleToEast = (Utils.getAzimuth(from,toEast) + 2*Math.PI ) % 2*Math.PI;
+        final double angleToSouth = (Utils.getAzimuth(from,toSouth) + 2*Math.PI ) % 2*Math.PI;
+        final double angleToWest = (Utils.getAzimuth(from,toWest) + 2*Math.PI ) % 2*Math.PI;
 
         //then
         assertEquals(0, angleToNorth, 0.1d);
@@ -95,10 +95,10 @@ public class UtilTest {
         final double theta = Math.PI / 2;
 
         //when
-        final VectorComponents rotatedVector1 = Util.rotateVector(theta, vector);
-        final VectorComponents rotatedVector2 = Util.rotateVector(theta, rotatedVector1);
-        final VectorComponents rotatedVector3 = Util.rotateVector(theta, rotatedVector2);
-        final VectorComponents rotatedVector4 = Util.rotateVector(theta, rotatedVector3);
+        final VectorComponents rotatedVector1 = Utils.rotateVector(theta, vector);
+        final VectorComponents rotatedVector2 = Utils.rotateVector(theta, rotatedVector1);
+        final VectorComponents rotatedVector3 = Utils.rotateVector(theta, rotatedVector2);
+        final VectorComponents rotatedVector4 = Utils.rotateVector(theta, rotatedVector3);
 
         //then
         assertEquals(0, rotatedVector1.u, 0.01d);
@@ -122,10 +122,10 @@ public class UtilTest {
         final double theta = Math.PI / 2;
 
         //when
-        final VectorComponents rotatedVector1 = Util.rotateVector(theta, vector);
-        final VectorComponents rotatedVector2 = Util.rotateVector(theta, rotatedVector1);
-        final VectorComponents rotatedVector3 = Util.rotateVector(theta, rotatedVector2);
-        final VectorComponents rotatedVector4 = Util.rotateVector(theta, rotatedVector3);
+        final VectorComponents rotatedVector1 = Utils.rotateVector(theta, vector);
+        final VectorComponents rotatedVector2 = Utils.rotateVector(theta, rotatedVector1);
+        final VectorComponents rotatedVector3 = Utils.rotateVector(theta, rotatedVector2);
+        final VectorComponents rotatedVector4 = Utils.rotateVector(theta, rotatedVector3);
 
         //then
         assertEquals(-1, rotatedVector1.u, 0.01d);
@@ -151,7 +151,7 @@ public class UtilTest {
         final VectorComponents a = new VectorComponents(1, 1);
 
         //when
-        final double calculatedAngle = Util.getAngleBetween(a, b);
+        final double calculatedAngle = Utils.getAngleBetween(a, b);
 
         //then
         assertEquals(Math.PI / 2, calculatedAngle, 0.01d);

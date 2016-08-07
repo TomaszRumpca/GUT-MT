@@ -10,7 +10,7 @@ import es.usc.citius.hipster.model.problem.ProblemBuilder;
 import es.usc.citius.hipster.model.problem.SearchProblem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import torumpca.pl.gut.mt.Util;
+import torumpca.pl.gut.mt.Utils;
 import torumpca.pl.gut.mt.dsm.model.*;
 import torumpca.pl.gut.mt.error.DataNotAvailableException;
 
@@ -55,7 +55,7 @@ public class AStarResolver implements ProblemResolver {
         return null;
     }
 
-    private Solution getSolution(Throwable throwable){
+    private Solution getSolution(Throwable throwable) {
         //TODO implement getSolution from error
         return null;
     }
@@ -63,7 +63,7 @@ public class AStarResolver implements ProblemResolver {
     public Solution resolve(final WindForecastModel forecast, UserData input) {
 
         LOG.info("Start determining the solution using A* algorithm");
-        LOG.info("User input: {}", input);
+//        LOG.info("User input: {}", input);
 
         final Ship ship = input.getShip();
         final LatLon originCoordinates = new LatLon(input.getOriginLat(), input.getOriginLon());
@@ -103,18 +103,22 @@ public class AStarResolver implements ProblemResolver {
 
                         final LatLon sourceLocation = forecast.getLatLonFromPoint(source);
                         final LatLon destLocation = forecast.getLatLonFromPoint(destination);
-                        final double distance = Util.getDistance(sourceLocation, destLocation);
+                        final double distance = Utils.getDistance(sourceLocation, destLocation);
 
                         final VectorComponents wind = forecastData[source.x][source.y];
 
-                        final double azimuth = Util.getAzimuth(sourceLocation, destLocation);
+                        final double azimuth = Utils.getAzimuth(sourceLocation, destLocation);
                         final double normalizedAzimuth = (azimuth + 2 * Math.PI) % (2 * Math.PI);
 
                         final double rotationAngle = -(normalizedAzimuth - Math.PI / 2);
                         final VectorComponents normalizedWindComponents =
-                                Util.rotateVector(rotationAngle, wind);
-                        LOG.debug("COST - normAzimuth {}{}, rotation {}{}, norm wind components {}, origin wind {}",
-                                Math.toDegrees(normalizedAzimuth),DEGREES, Math.toDegrees(rotationAngle), DEGREES, normalizedWindComponents, wind);
+                                Utils.rotateVector(rotationAngle, wind);
+                        LOG.debug(
+                                "COST - normAzimuth {}{}, rotation {}{}, norm wind components {},"
+                                        + " origin wind {}",
+                                Math.toDegrees(normalizedAzimuth), DEGREES,
+                                Math.toDegrees(rotationAngle), DEGREES, normalizedWindComponents,
+                                wind);
                         final Double cost =
                                 ship.calculateTravelCost(distance, normalizedWindComponents);
                         LOG.debug("COST - from {} to {} cost {}", source, destination, cost);
@@ -124,10 +128,11 @@ public class AStarResolver implements ProblemResolver {
                     @Override
                     public Double estimate(Point state) {
                         final LatLon currentLocation = forecast.getLatLonFromPoint(state);
-                        final double distance = Util.getDistance(currentLocation, goalLocation);
+                        final double distance = Utils.getDistance(currentLocation, goalLocation);
                         final Double estimatedCost = distance / ship.getAverageSpeedInMpS() * ship
                                 .getAverageCostOfHourOnSea() / 3600;
-                        LOG.debug("HEURISTIC - from {} to target in {} estimated cost {} distance {}",
+                        LOG.debug(
+                                "HEURISTIC - from {} to target in {} estimated cost {} distance {}",
                                 state, goal, estimatedCost, distance);
                         return estimatedCost;
                     }

@@ -1,0 +1,19 @@
+<div class="container pad-top">
+    <!--<a ui-sref="newShip" class="btn-primary btn-lg nodecoration">Add New Ship</a>-->
+    <table class="table shipwrecktable">
+        <tr>
+            <td><h3>All Ships</h3></td>
+            <td></td>
+        </tr>
+        <tr ng-repeat="ship in ships">
+            <td>{{ship.name}}</td>
+            <td>{{ship.description}}</td>
+            <td>{{ship.averageSpeedInKnots}}</td>
+            <td>{{ship.averageCostOfHourOnSea}}</td>
+            <td>
+                <a class="btn btn-primary" ui-sref="viewShip({id:ship.id})">View</a>
+                <!--<a class="btn btn-danger" ng-click="deleteShip(ship)">Delete</a>-->
+            </td>
+        </tr>
+    </table>
+</div>

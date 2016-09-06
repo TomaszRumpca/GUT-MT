@@ -11,4 +11,5 @@ public class ForecastDataAdapterFactory {
 //        return new KsgMetAdapter();
         return new FileAdapter();
     }
+
 }

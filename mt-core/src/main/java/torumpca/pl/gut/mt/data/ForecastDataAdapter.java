@@ -1,5 +1,6 @@
 package torumpca.pl.gut.mt.data;
 
+import torumpca.pl.gut.mt.dsm.model.WindForecastMetaData;
 import torumpca.pl.gut.mt.dsm.model.WindForecastModel;
 import torumpca.pl.gut.mt.error.DataNotAvailableException;
 
@@ -11,4 +12,6 @@ import java.time.LocalDateTime;
 public interface ForecastDataAdapter {
 
     WindForecastModel getWindForecast(LocalDateTime dateTime) throws DataNotAvailableException;
+
+    WindForecastMetaData getWindForecastMetaData() throws DataNotAvailableException;
 }

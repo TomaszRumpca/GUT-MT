@@ -6,7 +6,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.google.common.base.Joiner;
 import torumpca.pl.gut.mt.data.ForecastDataAdapter;
 import torumpca.pl.gut.mt.dsm.model.VectorComponents;
-import torumpca.pl.gut.mt.dsm.model.WindForecastModel;
+import torumpca.pl.gut.mt.dsm.model.WindForecastMetaData;
 import torumpca.pl.gut.mt.error.DataNotAvailableException;
 
 import java.io.IOException;
@@ -52,10 +52,10 @@ public abstract class AbstractKsgMetAdapter implements ForecastDataAdapter {
         return forecastData;
     }
 
-    protected WindForecastModel getWindForecastModelWithMetaData(InputStream metaDataIS)
+    public WindForecastMetaData getWindForecastMetaData(InputStream metaDataIS)
             throws DataNotAvailableException {
 
-        final WindForecastModel dsm = new WindForecastModel();
+        final WindForecastMetaData dsm = new WindForecastMetaData();
 
         try {
             final CsvMapper mapper = new CsvMapper();
@@ -84,6 +84,14 @@ public abstract class AbstractKsgMetAdapter implements ForecastDataAdapter {
             throw new DataNotAvailableException("forecast meta data not available", e);
         } catch (Exception e) {
             throw new DataNotAvailableException("Cannot parse forecast meta data", e);
+        } finally {
+            if(metaDataIS != null){
+                try {
+                    metaDataIS.close();
+                } catch (IOException e) {
+
+                }
+            }
         }
         return dsm;
     }

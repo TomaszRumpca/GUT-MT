@@ -1,13 +1,14 @@
 package torumpca.pl.gut.mt.data.ksgmet;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import torumpca.pl.gut.mt.dsm.model.VectorComponents;
+import torumpca.pl.gut.mt.dsm.model.WindForecastMetaData;
 import torumpca.pl.gut.mt.dsm.model.WindForecastModel;
 import torumpca.pl.gut.mt.error.DataNotAvailableException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -18,16 +19,16 @@ import java.time.LocalDateTime;
  */
 public class FileAdapter extends AbstractKsgMetAdapter {
 
+    Logger LOG = LoggerFactory.getLogger(FileAdapter.class);
+
     public WindForecastModel getWindForecast(LocalDateTime dateTime)
             throws DataNotAvailableException {
 
-        WindForecastModel dsm;
+        WindForecastModel modelDsm = new WindForecastModel();
 
         try {
-            final InputStream metaDataIS = new FileInputStream(getResourceFile("current.nfo"));
-
-            dsm = getWindForecastModelWithMetaData(metaDataIS);
-            metaDataIS.close();
+            WindForecastMetaData dsm = getWindForecastMetaData();
+            modelDsm.setMetaData(dsm);
 
             int uDataCount = dsm.getLatDataCount();
             int vDataCount = dsm.getLonDataCount();
@@ -39,13 +40,26 @@ public class FileAdapter extends AbstractKsgMetAdapter {
             uWind.close();
             vWind.close();
 
-            dsm.setForecastData(forecastData);
+            modelDsm.setForecastData(forecastData);
 
         } catch (IOException | URISyntaxException e) {
             throw new DataNotAvailableException("Test data not available!", e);
         }
 
-        return dsm;
+        return modelDsm;
+    }
+
+    @Override
+    public WindForecastMetaData getWindForecastMetaData() throws DataNotAvailableException {
+       try (InputStream metaDataIS = new FileInputStream(getResourceFile("current.nfo"))){
+            return getWindForecastMetaData(metaDataIS);
+        } catch (FileNotFoundException e) {
+            throw new DataNotAvailableException("File with forecast meta data cannot be found", e);
+        } catch (URISyntaxException e) {
+            throw new DataNotAvailableException("Invalid URI to local forecast meta data file", e);
+        } catch (IOException e) {
+            throw new DataNotAvailableException("Could not read forecast meta data file", e);
+        }
     }
 
     private File getResourceFile(String resourceName) throws URISyntaxException {

@@ -51,8 +51,9 @@ public class AStarResolver implements ProblemResolver {
     }
 
     private Solution getSolution(Algorithm.SearchResult result) {
-        //TODO implement getSolution from result
-        return null;
+        Solution solution= new Solution();
+        solution.overallCost = String.valueOf(result.getIterations());
+        return solution;
     }
 
     private Solution getSolution(Throwable throwable) {

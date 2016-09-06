@@ -10,8 +10,8 @@ public class Masks {
 
     public static boolean[][] generateSimpleMask(WindForecastModel dsm){
 
-        final int rows = dsm.getLatDataCount();
-        final int columns = dsm.getLonDataCount();
+        final int rows = dsm.getMetaData().getLatDataCount();
+        final int columns = dsm.getMetaData().getLonDataCount();
 
         final boolean[][] mask = new boolean[rows][columns];
         final VectorComponents[][] forecastData = dsm.getForecastData();
@@ -41,8 +41,8 @@ public class Masks {
 
     public static boolean[][] getFakeMask(WindForecastModel dsm){
 
-        final int rows = dsm.getLatDataCount();
-        final int columns = dsm.getLonDataCount();
+        final int rows = dsm.getMetaData().getLatDataCount();
+        final int columns = dsm.getMetaData().getLonDataCount();
 
         final boolean[][] mask = new boolean[rows][columns];
 

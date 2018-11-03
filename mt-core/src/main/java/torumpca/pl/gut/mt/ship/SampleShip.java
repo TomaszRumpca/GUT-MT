@@ -1,8 +1,8 @@
 package torumpca.pl.gut.mt.ship;
 
 import torumpca.pl.gut.mt.Utils;
-import torumpca.pl.gut.mt.dsm.model.Ship;
-import torumpca.pl.gut.mt.dsm.model.VectorComponents;
+import torumpca.pl.gut.mt.model.Ship;
+import torumpca.pl.gut.mt.model.VectorComponents;
 
 /**
  * Created by Tomasz Rumpca on 2016-04-22.
@@ -24,6 +24,7 @@ public class SampleShip implements Ship {
     public double getAverageSpeedInMpS(){
         return Utils.knotsToMetersPerSecond(getMaxSideWindSpeed());
     }
+
     public float getMaxWindSpeed() {
         return 30f;
     }

@@ -1,17 +1,17 @@
-import {Component} from "@angular/core";
+import {Component} from '@angular/core';
 
 @Component({
-  selector: 'available-forecasts-list',
+  selector: 'app-available-forecasts-list',
   template: `
     <ul>
       <li *ngFor="let windForecast of windForecasts">
-        <a>{{windForecast.day}} {{windForecast.month}} {{windForecast.year}}</a>
+        <a ng-click="selectedWindForecast(windForecast)">{{windForecast.day}} {{windForecast.month}} {{windForecast.year}}</a>
       </li>
     </ul>
   `,
   styles: []
 })
-export class AvailableForecastsListComponent {
+export class AppAvailableForecastsListComponent {
 
   windForecasts = [
     {
@@ -23,6 +23,6 @@ export class AvailableForecastsListComponent {
       month: 9,
       day: 29
     }
-  ]
+  ];
 
 }

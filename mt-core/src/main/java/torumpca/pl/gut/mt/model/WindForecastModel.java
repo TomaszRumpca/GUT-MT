@@ -1,4 +1,4 @@
-package torumpca.pl.gut.mt.dsm.model;
+package torumpca.pl.gut.mt.model;
 
 import torumpca.pl.gut.mt.error.DataNotAvailableException;
 

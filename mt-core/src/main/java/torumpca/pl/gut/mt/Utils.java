@@ -1,7 +1,7 @@
 package torumpca.pl.gut.mt;
 
-import torumpca.pl.gut.mt.dsm.model.LatLon;
-import torumpca.pl.gut.mt.dsm.model.VectorComponents;
+import torumpca.pl.gut.mt.model.LatLon;
+import torumpca.pl.gut.mt.model.VectorComponents;
 
 /**
  * Created by Tomasz Rumpca on 2016-04-23.

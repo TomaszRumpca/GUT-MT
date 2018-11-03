@@ -1,4 +1,4 @@
-package torumpca.pl.gut.mt.dsm.model;
+package torumpca.pl.gut.mt.model;
 
 import java.text.MessageFormat;
 
@@ -16,6 +16,7 @@ public class VectorComponents {
     }
 
     public double getSpeed(){
+        //TODO calculate direction
         return Math.sqrt(u*u+v*v);
     }
 

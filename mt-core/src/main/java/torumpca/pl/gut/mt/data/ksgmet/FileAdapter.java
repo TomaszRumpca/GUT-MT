@@ -3,9 +3,9 @@ package torumpca.pl.gut.mt.data.ksgmet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import torumpca.pl.gut.mt.dsm.model.VectorComponents;
-import torumpca.pl.gut.mt.dsm.model.WindForecastMetaData;
-import torumpca.pl.gut.mt.dsm.model.WindForecastModel;
+import torumpca.pl.gut.mt.model.VectorComponents;
+import torumpca.pl.gut.mt.model.WindForecastMetaData;
+import torumpca.pl.gut.mt.model.WindForecastModel;
 import torumpca.pl.gut.mt.error.DataNotAvailableException;
 
 import java.io.*;
@@ -32,8 +32,8 @@ public class FileAdapter extends AbstractKsgMetAdapter {
 
             int uDataCount = dsm.getLatDataCount();
             int vDataCount = dsm.getLonDataCount();
-            InputStream uWind = new FileInputStream(getResourceFile("U_WIND_ON_10M.csv"));
-            InputStream vWind = new FileInputStream(getResourceFile("V_WIND_ON_10M.csv"));
+            InputStream uWind = new FileInputStream(getResourceFile("U_WIND_ON_10M_2.csv"));
+            InputStream vWind = new FileInputStream(getResourceFile("V_WIND_ON_10M_2.csv"));
 
             VectorComponents[][] forecastData =
                     getWindForecastData(uDataCount, vDataCount, uWind, vWind);

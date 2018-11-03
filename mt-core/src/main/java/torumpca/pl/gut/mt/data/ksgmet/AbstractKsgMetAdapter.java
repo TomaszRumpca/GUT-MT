@@ -5,8 +5,8 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.google.common.base.Joiner;
 import torumpca.pl.gut.mt.data.ForecastDataAdapter;
-import torumpca.pl.gut.mt.dsm.model.VectorComponents;
-import torumpca.pl.gut.mt.dsm.model.WindForecastMetaData;
+import torumpca.pl.gut.mt.model.VectorComponents;
+import torumpca.pl.gut.mt.model.WindForecastMetaData;
 import torumpca.pl.gut.mt.error.DataNotAvailableException;
 
 import java.io.IOException;

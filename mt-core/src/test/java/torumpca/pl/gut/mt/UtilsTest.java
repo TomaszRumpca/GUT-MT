@@ -1,8 +1,8 @@
 package torumpca.pl.gut.mt;
 
 import org.junit.jupiter.api.Test;
-import torumpca.pl.gut.mt.dsm.model.LatLon;
-import torumpca.pl.gut.mt.dsm.model.VectorComponents;
+import torumpca.pl.gut.mt.model.LatLon;
+import torumpca.pl.gut.mt.model.VectorComponents;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

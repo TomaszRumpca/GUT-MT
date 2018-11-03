@@ -1,0 +1,7 @@
+GET http://localhost:8080/api/forecast/meta
+
+###
+
+POST http://localhost:8080/user
+
+###

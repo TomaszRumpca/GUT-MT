@@ -1,4 +1,4 @@
-package torumpca.pl.gut.mt.dsm.model;
+package torumpca.pl.gut.mt.model;
 
 /**
  * Created by Tomasz Rumpca on 2016-08-15.

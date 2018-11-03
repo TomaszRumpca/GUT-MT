@@ -1,4 +1,4 @@
-package torumpca.pl.gut.mt.dsm.model;
+package torumpca.pl.gut.mt.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

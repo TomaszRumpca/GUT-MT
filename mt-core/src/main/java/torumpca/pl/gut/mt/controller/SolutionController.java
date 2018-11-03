@@ -10,13 +10,11 @@ import torumpca.pl.gut.mt.alg.ProblemResolver;
 import torumpca.pl.gut.mt.alg.ResolverFactory;
 import torumpca.pl.gut.mt.data.ForecastDataAdapter;
 import torumpca.pl.gut.mt.data.ForecastDataAdapterFactory;
-import torumpca.pl.gut.mt.dsm.model.Solution;
-import torumpca.pl.gut.mt.dsm.model.UserData;
-import torumpca.pl.gut.mt.dsm.model.WindForecastMetaData;
-import torumpca.pl.gut.mt.dsm.model.WindForecastModel;
+import torumpca.pl.gut.mt.model.Solution;
+import torumpca.pl.gut.mt.model.UserData;
+import torumpca.pl.gut.mt.model.WindForecastMetaData;
+import torumpca.pl.gut.mt.model.WindForecastModel;
 import torumpca.pl.gut.mt.error.DataNotAvailableException;
-
-import java.time.LocalDateTime;
 
 /**
  * Created by Tomasz Rumpca on 2016-08-15.
@@ -34,7 +32,8 @@ public class SolutionController {
         final ForecastDataAdapter adapter = ForecastDataAdapterFactory.getDataAdapter();
         WindForecastModel dsm = null;
         try {
-            dsm = adapter.getWindForecast(LocalDateTime.now());
+//            dsm = adapter.getWindForecast(LocalDateTime.now());
+            dsm = adapter.getWindForecast(userInput.getPlannedDepartureDateTime());
         } catch (DataNotAvailableException e) {
             LOG.error("Forecast not available.", e);
         }
@@ -59,6 +58,5 @@ public class SolutionController {
 
         return forecastMetaData;
     }
-
 
 }

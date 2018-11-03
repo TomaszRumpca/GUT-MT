@@ -1,7 +1,7 @@
 package torumpca.pl.gut.mt.alg;
 
-import torumpca.pl.gut.mt.dsm.model.VectorComponents;
-import torumpca.pl.gut.mt.dsm.model.WindForecastModel;
+import torumpca.pl.gut.mt.model.VectorComponents;
+import torumpca.pl.gut.mt.model.WindForecastModel;
 
 /**
  * Created by Tomasz Rumpca on 2016-04-07.
@@ -39,7 +39,7 @@ public class Masks {
         return mask;
     }
 
-    public static boolean[][] getFakeMask(WindForecastModel dsm){
+    public static boolean[][] getMaskAllValid(WindForecastModel dsm){
 
         final int rows = dsm.getMetaData().getLatDataCount();
         final int columns = dsm.getMetaData().getLonDataCount();

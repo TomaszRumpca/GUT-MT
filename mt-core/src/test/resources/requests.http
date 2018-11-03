@@ -2,11 +2,11 @@ POST localhost:8080/api/solve
 Content-Type: application/json
 
 {
-	"originCoords" : {
+	"originCoordinates" : {
 		"latitude" : 48.802824,
 		"longitude" : 13.236774
 	},
-	"goalCoords" : {
+	"goalCoordinates" : {
 		"latitude" : 50.952824,
 		"longitude" : 14.886774
 	}

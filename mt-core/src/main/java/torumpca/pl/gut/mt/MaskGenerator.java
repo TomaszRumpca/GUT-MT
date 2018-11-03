@@ -1,6 +1,6 @@
 package torumpca.pl.gut.mt;
 
-import torumpca.pl.gut.mt.dsm.model.Coordinates;
+import torumpca.pl.gut.mt.model.Coordinates;
 
 import java.io.*;
 import java.net.HttpURLConnection;

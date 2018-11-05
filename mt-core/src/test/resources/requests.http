@@ -1,12 +1,13 @@
 POST localhost:8080/api/solve
+Authorization: Basic dXNlcjo3N2U1MDExMS1jYTllLTRkODUtOGIxNy0zMzEyODcwYTFkYWE=
 Content-Type: application/json
 
 {
-	"originCoordinates" : {
+	"origin" : {
 		"latitude" : 48.802824,
 		"longitude" : 13.236774
 	},
-	"goalCoordinates" : {
+	"destination" : {
 		"latitude" : 50.952824,
 		"longitude" : 14.886774
 	}

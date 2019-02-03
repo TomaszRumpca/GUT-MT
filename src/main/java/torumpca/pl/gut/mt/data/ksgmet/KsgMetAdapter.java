@@ -146,7 +146,7 @@ public class KsgMetAdapter extends AbstractKsgMetAdapter {
             for (Element directoryName : directories) {
                 final String name = directoryName.ownText();
                 LOG.info("dirname: '{}'", name);
-                if (!name.equals("Parent Directory") && !name.equals("ACM_CONVECTIVE_PERCIP.csv") && !name.equals("current.nf")) {
+                if (!name.equals("Parent Directory") && !name.equals("current.nfo")) {
                     final String cleanName = name.endsWith("/") ? name.substring(0, name.length() - 1) : name;
                     dirs.add(cleanName);
                 }

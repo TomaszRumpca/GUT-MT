@@ -8,6 +8,11 @@ Authorization: Basic dXNlcjpwYXNz
 
 ###
 
+GET http://localhost:8080/forecast/meta
+Authorization: Basic dXNlcjpwYXNz
+
+###
+
 GET http://localhost:8080/forecast
 Authorization: Basic dXNlcjpwYXNz
 

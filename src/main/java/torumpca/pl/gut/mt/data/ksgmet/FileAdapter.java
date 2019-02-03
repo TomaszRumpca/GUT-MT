@@ -13,6 +13,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Tomasz Rumpca on 2016-05-01.
@@ -27,7 +30,7 @@ public class FileAdapter extends AbstractKsgMetAdapter {
         WindForecastModel modelDsm = new WindForecastModel();
 
         try {
-            WindForecastMetaData dsm = getWindForecastMetaData();
+            WindForecastMetaData dsm = getWindForecastMetaData(0);
             modelDsm.setMetaData(dsm);
 
             int uDataCount = dsm.getLatDataCount();
@@ -50,7 +53,8 @@ public class FileAdapter extends AbstractKsgMetAdapter {
     }
 
     @Override
-    public WindForecastMetaData getWindForecastMetaData() throws DataNotAvailableException {
+    public WindForecastMetaData
+    getWindForecastMetaData(Integer year) throws DataNotAvailableException {
        try (InputStream metaDataIS = new FileInputStream(getResourceFile("current.nfo"))){
             return getWindForecastMetaData(metaDataIS);
         } catch (FileNotFoundException e) {
@@ -60,6 +64,11 @@ public class FileAdapter extends AbstractKsgMetAdapter {
         } catch (IOException e) {
             throw new DataNotAvailableException("Could not read forecast meta data file", e);
         }
+    }
+
+    @Override
+    public List<OffsetDateTime> getForecastAvailableDates() {
+        return new ArrayList<>();
     }
 
     private File getResourceFile(String resourceName) throws URISyntaxException {

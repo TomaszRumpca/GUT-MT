@@ -2,3 +2,13 @@ GET http://localhost:8080/seaport
 Authorization: Basic dXNlcjpwYXNz
 
 ###
+
+GET http://localhost:8080/forecast/meta?year=2018
+Authorization: Basic dXNlcjpwYXNz
+
+###
+
+GET http://localhost:8080/forecast
+Authorization: Basic dXNlcjpwYXNz
+
+###

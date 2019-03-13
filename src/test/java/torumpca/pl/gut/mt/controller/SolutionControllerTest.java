@@ -20,7 +20,7 @@ class SolutionControllerTest {
 
 //    @Test
 //    void solve() {
-//        UserData input = new UserData();
+//        AlgorithmInputData input = new AlgorithmInputData();
 //        input.setOrigin(new Coordinates(48.802824d, 13.236774d));
 //        input.setDestination(new Coordinates(50.952824, 14.886774));
 //

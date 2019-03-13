@@ -1,5 +1,5 @@
-POST localhost:8080/api/solve
-Authorization: Basic dXNlcjo3N2U1MDExMS1jYTllLTRkODUtOGIxNy0zMzEyODcwYTFkYWE=
+POST localhost:8080/api/solve?cachedData=true
+Authorization: Basic dXNlcjpwYXNz
 Content-Type: application/json
 
 {
@@ -10,7 +10,8 @@ Content-Type: application/json
 	"destination" : {
 		"latitude" : 50.952824,
 		"longitude" : 14.886774
-	}
+	},
+	"plannedDepartureDateTime" : "2019-03-12T14:00"
 }
 
 ###

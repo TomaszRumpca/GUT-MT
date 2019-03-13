@@ -3,7 +3,7 @@ package torumpca.pl.gut.mt.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.authentication.UserCredentials;
 import org.springframework.web.bind.annotation.*;
-import torumpca.pl.gut.mt.model.User;
+import torumpca.pl.gut.mt.repository.User;
 import torumpca.pl.gut.mt.repository.UserRepository;
 
 import java.util.List;

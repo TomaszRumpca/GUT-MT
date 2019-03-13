@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import torumpca.pl.gut.mt.model.Seaport;
+import torumpca.pl.gut.mt.repository.Seaport;
 import torumpca.pl.gut.mt.repository.SeaportRepository;
 
 import java.util.List;

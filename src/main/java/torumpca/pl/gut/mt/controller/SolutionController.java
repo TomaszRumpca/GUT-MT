@@ -1,23 +1,18 @@
 package torumpca.pl.gut.mt.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import torumpca.pl.gut.mt.alg.ProblemResolver;
-import torumpca.pl.gut.mt.alg.ResolverFactory;
-import torumpca.pl.gut.mt.data.ForecastDataAdapter;
-import torumpca.pl.gut.mt.data.ForecastDataAdapterFactory;
-import torumpca.pl.gut.mt.error.DataNotAvailableException;
-import torumpca.pl.gut.mt.model.Solution;
-import torumpca.pl.gut.mt.model.UserData;
-import torumpca.pl.gut.mt.model.WindForecastModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import torumpca.pl.gut.mt.algorithm.ProblemResolver;
+import torumpca.pl.gut.mt.algorithm.ResolverFactory;
+import torumpca.pl.gut.mt.algorithm.model.AlgorithmInputData;
+import torumpca.pl.gut.mt.forecast.DataNotAvailableException;
+import torumpca.pl.gut.mt.forecast.ForecastDataAdapter;
+import torumpca.pl.gut.mt.forecast.ForecastDataAdapterFactory;
+import torumpca.pl.gut.mt.forecast.model.WindForecastModel;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 
 /**
@@ -30,25 +25,28 @@ public class SolutionController {
     private static Logger LOG = LoggerFactory.getLogger(SolutionController.class);
 
     @RequestMapping(value = "solve", method = RequestMethod.POST)
-    public Solution solve(@RequestBody String userInput) throws IOException {
+    public ResponseEntity solve(@RequestBody AlgorithmInputData algorithmInputData,
+                                @RequestParam(required = false) boolean cachedData) {
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
+        final ForecastDataAdapter adapter = ForecastDataAdapterFactory.getDataAdapter(cachedData);
 
-        final UserData userData = mapper.readValue(userInput, UserData.class);
+        LocalDateTime plannedDepartureDateTime = algorithmInputData.getPlannedDepartureDateTime();
+        if (plannedDepartureDateTime == null) {
+            plannedDepartureDateTime = LocalDateTime.now();
+            LOG.info("Departure date not provided, current date time will be used - {}", plannedDepartureDateTime);
+        }
 
-        final ForecastDataAdapter adapter = ForecastDataAdapterFactory.getDataAdapter();
-        WindForecastModel forecast = null;
+        WindForecastModel forecast;
         try {
-            forecast = adapter.getWindForecast(LocalDateTime.now());
-//            forecast = adapter.getWindForecast(userInput.getPlannedDepartureDateTime());
+            forecast = adapter.getWindForecast(plannedDepartureDateTime);
         } catch (DataNotAvailableException e) {
             LOG.error("Forecast not available.", e);
+            return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
         }
 
         final ProblemResolver resolver = ResolverFactory.getResolver();
 
-        return resolver.resolve(forecast, userData);
+        return ResponseEntity.ok(resolver.resolve(forecast, algorithmInputData));
     }
 
 }

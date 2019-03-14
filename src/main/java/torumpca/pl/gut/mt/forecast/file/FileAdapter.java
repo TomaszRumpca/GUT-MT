@@ -29,10 +29,10 @@ public class FileAdapter extends AbstractKsgMetAdapter {
     private static final Map<Integer, CachedForecast> forecastFiles = new HashMap<>();
 
     static {
-        forecastFiles.put(2017, new CachedForecast("current.nfo", "U_WIND_ON_10M_2017.csv", "V_WIND_ON_10M_2017.csv"));
-        forecastFiles.put(2018, new CachedForecast("current.nfo", "U_WIND_ON_10M_2018.csv", "V_WIND_ON_10M_2018.csv"));
-        forecastFiles.put(2019, new CachedForecast("current.nfo", "U_WIND_ON_10M_2.csv", "V_WIND_ON_10M_2.csv"));
-        forecastFiles.put(2020, new CachedForecast("current.nfo", "U_WIND_ON_10M.csv", "V_WIND_ON_10M.csv"));
+        forecastFiles.put(2017, new CachedForecast("forecasts/current_2017.nfo", "forecasts/U_WIND_ON_10M_2017.csv", "forecasts/V_WIND_ON_10M_2017.csv"));
+        forecastFiles.put(2018, new CachedForecast("forecasts/current_2018.nfo", "forecasts/U_WIND_ON_10M_2018.csv", "forecasts/V_WIND_ON_10M_2018.csv"));
+        forecastFiles.put(2019, new CachedForecast("forecasts/current_2019.nfo", "forecasts/U_WIND_ON_10M_2019.csv", "forecasts/V_WIND_ON_10M_2019.csv"));
+        forecastFiles.put(2020, new CachedForecast("forecasts/current_2020.nfo", "forecasts/U_WIND_ON_10M_2020.csv", "forecasts/V_WIND_ON_10M_2020.csv"));
     }
 
     private final static Logger LOG = LoggerFactory.getLogger(FileAdapter.class);
@@ -43,19 +43,13 @@ public class FileAdapter extends AbstractKsgMetAdapter {
         WindForecastModel forecastModel = new WindForecastModel();
 
         try {
-            WindForecastMetaData dsm = getWindForecastMetaData(dateTime.getYear());
-
-            CachedForecast cachedForecast = forecastFiles.get(dateTime.getYear());
-
-            if (cachedForecast == null) {
-                throw new DataNotAvailableException(String.format("Test data for %s not available!",
-                        dateTime.getYear()));
-            }
+            CachedForecast cachedForecast = getCachedForecast(dateTime.getYear());
 
             LOG.info("found cached forecast for {}, meta: {}, u: {}, v: {}", dateTime.getYear(),
                     cachedForecast.getMetaDataFileName(), cachedForecast.getuWindFileName(),
                     cachedForecast.getvWindFileName());
 
+            WindForecastMetaData dsm = getWindForecastMetaData(cachedForecast.getMetaDataFileName());
             forecastModel.setMetaData(dsm);
 
             int uDataCount = dsm.getLatDataCount();
@@ -77,14 +71,23 @@ public class FileAdapter extends AbstractKsgMetAdapter {
         return forecastModel;
     }
 
+    private CachedForecast getCachedForecast(int year) throws DataNotAvailableException {
+        CachedForecast cachedForecast = forecastFiles.get(year);
+
+        if (cachedForecast == null) {
+            throw new DataNotAvailableException(String.format("Test data for %s not available!",
+                    year));
+        }
+        return cachedForecast;
+    }
+
     @Override
     public WindForecastMetaData getWindForecastMetaData(Integer year) throws DataNotAvailableException {
-        final String resourceName;
-        final CachedForecast cachedForecast = forecastFiles.get(year);
-        if (cachedForecast == null) {
-            throw new DataNotAvailableException("no cached forecast meta data file for " + year);
-        }
-        resourceName = cachedForecast.getMetaDataFileName();
+        final CachedForecast cachedForecast = getCachedForecast(year);
+        return getWindForecastMetaData(cachedForecast.getMetaDataFileName());
+    }
+
+    private WindForecastMetaData getWindForecastMetaData(String resourceName) throws DataNotAvailableException {
         try (InputStream metaDataIS = new FileInputStream(getResourceFile(resourceName))) {
             return getWindForecastMetaData(metaDataIS);
         } catch (FileNotFoundException e) {

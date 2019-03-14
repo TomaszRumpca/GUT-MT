@@ -11,10 +11,6 @@ public class DataNotAvailableException extends Exception {
         super(errorMessage);
     }
 
-    public DataNotAvailableException(String errorMessage, String... args){
-        super(MessageFormat.format(errorMessage, args));
-    }
-
     public DataNotAvailableException(String errorMessage, Throwable cause){
         super(errorMessage, cause);
     }

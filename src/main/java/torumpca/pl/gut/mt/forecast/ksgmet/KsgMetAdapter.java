@@ -76,7 +76,7 @@ public class KsgMetAdapter extends AbstractKsgMetAdapter {
             windVIS.close();
         } catch (IOException e) {
             LOG.error("failed to prepare forecast for {}", dateTime.toString(), e);
-            throw new DataNotAvailableException("Forecast for date {} is not available on KSGMet",
+            throw new DataNotAvailableException("Forecast for date {0} is not available on KSGMet",
                     e, dateTime.toString());
         }
 

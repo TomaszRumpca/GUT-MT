@@ -1,19 +1,58 @@
+POST localhost:8080/api/solve?cachedData=true
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+{
+	"origin" : {
+		"latitude" : 48.802824,
+		"longitude" : 13.236774
+	},
+	"destination" : {
+		"latitude" : 50.952824,
+		"longitude" : 14.886774
+	},
+	"plannedDepartureDateTime" : "2019-03-12T14:00"
+}
+
+###
+
+GET localhost:8080/forecast?date=2019-03-15&cachedData=false&hour=23
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+###
+
+GET localhost:8080/forecast?date=2018-01-01&cachedData=true
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+###
+
+GET localhost:8080/forecast/dates?cachedData=true
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+###
+
+GET localhost:8080/forecast/meta?year=2018&cachedData=true
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+###
+
+GET localhost:8080/forecast/dates?cachedData=false
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+###
+
+GET localhost:8080/forecast/meta?cachedData=false
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+###
+
 GET http://localhost:8080/seaport
-Authorization: Basic dXNlcjpwYXNz
-
-###
-
-GET http://localhost:8080/forecast/meta?year=2018
-Authorization: Basic dXNlcjpwYXNz
-
-###
-
-GET http://localhost:8080/forecast/meta
-Authorization: Basic dXNlcjpwYXNz
-
-###
-
-GET http://localhost:8080/forecast
 Authorization: Basic dXNlcjpwYXNz
 
 ###

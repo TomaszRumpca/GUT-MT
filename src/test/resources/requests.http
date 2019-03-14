@@ -15,3 +15,15 @@ Content-Type: application/json
 }
 
 ###
+
+GET localhost:8080/forecast?cachedData=true
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+###
+
+GET localhost:8080/forecast?cachedData=false
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+###

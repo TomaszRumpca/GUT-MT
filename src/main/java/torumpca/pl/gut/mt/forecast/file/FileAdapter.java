@@ -15,10 +15,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by Tomasz Rumpca on 2016-05-01.
@@ -97,7 +98,11 @@ public class FileAdapter extends AbstractKsgMetAdapter {
 
     @Override
     public List<OffsetDateTime> getForecastAvailableDates() {
-        return new ArrayList<>();
+        return forecastFiles
+                .keySet()
+                .stream()
+                .map(year -> OffsetDateTime.of(year, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC))
+                .collect(Collectors.toList());
     }
 
     private File getResourceFile(String resourceName) throws URISyntaxException, DataNotAvailableException {

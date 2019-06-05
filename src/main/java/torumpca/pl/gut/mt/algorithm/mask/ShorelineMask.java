@@ -18,7 +18,7 @@ public class ShorelineMask implements Mask {
 
     private final static Logger LOG = LoggerFactory.getLogger(ShorelineMask.class);
 
-    private static final String SHORELINE_FILE_NAME = "shoreline-full.txt";
+    private static final String SHORELINE_FILE_NAME = "shoreline-ETRS89.txt";
 
     private final GeometryLoader geometryLoader = new GeometryLoader();
     private MultiPolygon shoreline;
@@ -36,7 +36,8 @@ public class ShorelineMask implements Mask {
     public boolean isAllowed(Coordinates source, Coordinates target) {
         LineString path = getPathRepresentation(source, target);
         assert path != null;
-        return !path.crosses(shoreline);
+//        return !path.crosses(shoreline);
+        return true;
     }
 
     private LineString getPathRepresentation(Coordinates source, Coordinates target) {

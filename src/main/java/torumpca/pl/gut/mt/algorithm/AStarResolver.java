@@ -4,6 +4,7 @@ import es.usc.citius.hipster.algorithm.Algorithm;
 import es.usc.citius.hipster.algorithm.Hipster;
 import es.usc.citius.hipster.model.Transition;
 import es.usc.citius.hipster.model.function.impl.StateTransitionFunction;
+import es.usc.citius.hipster.model.impl.WeightedNode;
 import es.usc.citius.hipster.model.problem.ProblemBuilder;
 import es.usc.citius.hipster.model.problem.SearchProblem;
 import org.slf4j.Logger;
@@ -31,7 +32,6 @@ public class AStarResolver implements ProblemResolver {
     private static Logger LOG = LoggerFactory.getLogger(AStarResolver.class);
 
     private final List<Mask> masks;
-    private WindForecastModel forecast;
 
     @Autowired
     public AStarResolver(List<Mask> masks) {
@@ -42,41 +42,34 @@ public class AStarResolver implements ProblemResolver {
 
     public Solution resolve(final WindForecastModel forecast, AlgorithmInputData input) {
 
-        this.forecast = forecast;
-        LOG.info("Start determining the solution using A* algorithm");
+        double lonStep = forecast.getMetaData().getLonStep();
+        double latStep = forecast.getMetaData().getLatStep();
 
-        final Craft craft = input.getShip();
+        double maxMoveDistance = Math.sqrt(lonStep * lonStep + latStep * latStep);
 
         final Coordinates originCoordinates = input.getOrigin();
         final Coordinates goalCoordinates = input.getDestination();
+        final Craft craft = input.getShip();
 
-        final Point origin, goal;
-        try {
-            origin = forecast.getPointFromLatLon(originCoordinates);
-            goal = forecast.getPointFromLatLon(goalCoordinates);
-        } catch (DataNotAvailableException e) {
-            LOG.error("origin and/or destination out of range of available forecast data", e);
-            return getSolution(e);
-        }
-
-        final Coordinates goalLocation = forecast.getLatLonFromPoint(goal);
+        LOG.info("Finding path from {} to {} for {} using A* algorithm", originCoordinates, goalCoordinates, craft.getClass().getCanonicalName());
 
         final VectorComponents[][] forecastData = forecast.getForecastData();
 
         //@formatter:off
-        SearchProblem problemDef = ProblemBuilder
+        SearchProblem<Void, Coordinates, WeightedNode<Void, Coordinates, Double>> problemDef = ProblemBuilder
                 .create()
-                .initialState(origin)
+                .initialState(originCoordinates)
                 .defineProblemWithoutActions()
-                .useTransitionFunction(getTransitionFunction())
+                .useTransitionFunction(getTransitionFunction(latStep, lonStep, maxMoveDistance, goalCoordinates))
                 .useCostFunction(transition ->
                         costFunction(forecast, craft, forecastData, transition))
-                .useHeuristicFunction((Point state) ->
-                        heuristicFunction(forecast, craft, goal, goalLocation, state))
+                .useHeuristicFunction((Coordinates state) ->
+                        heuristicFunction(craft, state, goalCoordinates))
                 .build();
+
         //@formatter:on
 
-        Algorithm.SearchResult result = Hipster.createAStar(problemDef).search(goal);
+        Algorithm.SearchResult result = Hipster.createAStar(problemDef).search(goalCoordinates);
 
         LOG.info("Result: \n{}", result);
 
@@ -85,91 +78,109 @@ public class AStarResolver implements ProblemResolver {
 
     /**
      * szuka punktow w najblizszym otoczeniu statku które mogą stać się następnym elementem na jesgo ścieżce.
-     *
+     * <p>
      * //TODO powinna uwzględniać ograniczenia dotyczące maksymalnej prędkości wiatru oraz jego maksymalnych podmuchów
      *
      * @param shipPosition punkt z którego wyznaczane są następne możliwe przejścia
      * @return zbiór punktów które mogą zostać odwiedzone w następnym kroku algorytmu, bezpośredni sąsiedzi shipPosition
      */
-    private Collection<Point> validLocationsFrom(WindForecastModel forecastModel, Point shipPosition) {
-        Collection<Point> validMoves = new HashSet<>();
+    private Collection<Coordinates> validLocationsFrom(Coordinates shipPosition, double latStep, double lonStep, double maxMoveDistance, Coordinates goal) {
+
+        Collection<Coordinates> validMoves = new HashSet<>();
         // Check for all valid movements
-        for (int row = -1; row <= 1; row++) {
-            for (int column = -1; column <= 1; column++) {
+        for (double row = -lonStep; row <= lonStep; row += lonStep) {
+            for (double column = -latStep; column <= latStep; column += latStep) {
                 if (row != 0 || column != 0) {
-                    final Point predictedPosition = new Point(shipPosition.x + column, shipPosition.y + row);
+
+                    Coordinates predictedCoordinates = new Coordinates(shipPosition.latitude + column, shipPosition.longitude + row);
 
                     boolean allowed = true;
                     for (Mask mask : masks) {
-                        Coordinates source = forecastModel.getLatLonFromPoint(shipPosition);
-                        Coordinates target = forecastModel.getLatLonFromPoint(predictedPosition);
-                        boolean allowedByCurrentMask = mask.isAllowed(source, target);
-                        if(!allowedByCurrentMask){
-                            LOG.info("Move ({}) -> ({}) disallowed by {}", source, target, mask.getClass().getCanonicalName());
+                        boolean allowedByCurrentMask = mask.isAllowed(shipPosition, predictedCoordinates);
+                        if (!allowedByCurrentMask) {
+                            LOG.info("Move ({}) -> ({}) disallowed by {}", shipPosition, predictedCoordinates, mask.getClass().getCanonicalName());
                             allowed = false;
                             break;
                         }
                     }
 
                     if (allowed) {
-                        validMoves.add(predictedPosition);
+                        validMoves.add(predictedCoordinates);
                     }
                 }
             }
         }
+
+        double deltaLatitude = shipPosition.latitude - goal.latitude;
+        double deltaLongitude = shipPosition.longitude - goal.longitude;
+
+        double distanceToGoal = Math.sqrt(deltaLatitude * deltaLatitude + deltaLongitude * deltaLongitude);
+
+        if (distanceToGoal < maxMoveDistance) {
+            validMoves.add(goal);
+        }
+
         return validMoves;
     }
 
     private Solution getSolution(Algorithm.SearchResult result, WindForecastModel forecast) {
         long overallCost = result.getElapsed();
         List optimalPaths = result.getOptimalPaths();
-        List<List<Coordinates>> mappedResult = new ArrayList<>();
-        optimalPaths.stream().forEach(locationsList -> {
-            List<Point> path = (List<Point>) locationsList;
-            final List<Coordinates> coordinates = path.stream().map(point -> pointToCoordinates(point, forecast)).collect(Collectors.toList());
-            mappedResult.add(coordinates);
-        });
+//        List<List<Coordinates>> mappedResult = new ArrayList<>();
+//        optimalPaths.stream().forEach(locationsList -> {
+//            List<Point> path = (List<Point>) locationsList;
+//            final List<Coordinates> coordinates = path.stream().map(point -> pointToCoordinates(point, forecast)).collect(Collectors.toList());
+//            mappedResult.add(coordinates);
+//        });
 
-        return new Solution(mappedResult, overallCost);
+        return new Solution(result.getOptimalPaths(), overallCost);
     }
 
 
-    private StateTransitionFunction<Point> getTransitionFunction() {
-        return new StateTransitionFunction<Point>() {
+    private StateTransitionFunction<Coordinates> getTransitionFunction(double latStep, double lonStep, double maxMoveDistance, Coordinates goal) {
+        return new StateTransitionFunction<Coordinates>() {
             @Override
-            public Iterable<Point> successorsOf(Point state) {
-                return validLocationsFrom(forecast, state);
+            public Iterable<Coordinates> successorsOf(Coordinates state) {
+                return validLocationsFrom(state, latStep, lonStep, maxMoveDistance, goal);
             }
         };
     }
 
-    private Double costFunction(WindForecastModel forecast, Craft craft, VectorComponents[][] forecastData, Transition<Void, Point> transition) {
-        final Point source = transition.getFromState();
-        final Point destination = transition.getState();
+    private Double costFunction(WindForecastModel forecast, Craft craft, VectorComponents[][] forecastData, Transition<Void, Coordinates> transition) {
+        final Coordinates source = transition.getFromState();
+        final Coordinates destination = transition.getState();
 
         if (source.equals(destination)) {
             return Double.MAX_VALUE;
         }
 
-        final Coordinates sourceLocation = forecast.getLatLonFromPoint(source);
-        final Coordinates destLocation = forecast.getLatLonFromPoint(destination);
+//        final Coordinates sourceLocation = forecast.getLatLonFromPoint(source);
+//        final Coordinates destLocation = forecast.getLatLonFromPoint(destination);
 
-        final VectorComponents wind = forecastData[source.x][source.y];
+        Point sourcePoint;
+        try {
+            sourcePoint = forecast.getPointFromLatLon(source);
+        } catch (DataNotAvailableException e) {
+            LOG.trace("dta");
+            sourcePoint = new Point(0, 0);
+        }
+
+
+        final VectorComponents wind = forecastData[sourcePoint.x][sourcePoint.y];
 
         final Double cost =
-                craft.calculateTravelCost(sourceLocation, destLocation, wind);
+                craft.calculateTravelCost(source, destination, wind);
         LOG.debug("COST - from {} to {} cost {}", source, destination, cost);
         return cost;
     }
 
-    private Double heuristicFunction(WindForecastModel forecast, Craft craft, Point goal, Coordinates goalLocation, Point state) {
-        final Coordinates currentLocation = forecast.getLatLonFromPoint(state);
+    private Double heuristicFunction(Craft craft, Coordinates currentLocation, Coordinates goalLocation) {
         final double distance = Utils.getGreatCircleDistance(currentLocation, goalLocation);
         final Double estimatedCost = distance / craft.getAverageSpeedInMpS() * craft
                 .getAverageCostOfHourOnSea() / 3600;
         LOG.debug(
                 "HEURISTIC - from {} to target in {} estimated cost {} distance {}",
-                state, goal, estimatedCost, distance);
+                currentLocation, goalLocation, estimatedCost, distance);
         return estimatedCost;
     }
 

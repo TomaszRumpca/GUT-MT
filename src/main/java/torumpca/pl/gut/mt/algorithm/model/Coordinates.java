@@ -1,6 +1,7 @@
 package torumpca.pl.gut.mt.algorithm.model;
 
 import java.text.MessageFormat;
+import java.util.Objects;
 
 /**
  * Created by Tomasz Rumpca on 2016-08-15.
@@ -42,5 +43,19 @@ public class Coordinates {
                     .format("[lat:{0}, lon:{1}]", String.valueOf(latitude), String.valueOf(longitude));
         }
         return "[]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordinates that = (Coordinates) o;
+        return latitude.equals(that.latitude) &&
+                longitude.equals(that.longitude);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(latitude, longitude);
     }
 }

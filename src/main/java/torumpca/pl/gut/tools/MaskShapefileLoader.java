@@ -89,7 +89,7 @@ public class MaskShapefileLoader {
 //        459267.0828999998 799634.0013999995, 459472.9787999997 799613.2611999996
         LineString lineString2 = geometryLoader.readLineString("LINESTRING(479267.0828999998 779634.0013999995, 479472.9787999997 749613.2611999996)");
 
-        MultiPolygon lineString = geometryLoader.readMultiPolygonFromFile("C:\\Users\\torumpca\\IdeaProjects\\GUT-MT\\src\\main\\resources\\shoreline-full.txt");
+        MultiPolygon lineString = geometryLoader.readMultiPolygonFromFile("C:\\Users\\torumpca\\IdeaProjects\\GUT-MT\\src\\main\\resources\\shoreline-ETRS89.txt");
 
 
         FeatureLayer featureLayer = getFeatureLayer(featureSource, lineString);

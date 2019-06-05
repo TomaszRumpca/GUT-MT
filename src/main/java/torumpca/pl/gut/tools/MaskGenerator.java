@@ -1,4 +1,4 @@
-package torumpca.pl.gut.mt.tools;
+package torumpca.pl.gut.tools;
 
 import torumpca.pl.gut.mt.algorithm.model.Coordinates;
 

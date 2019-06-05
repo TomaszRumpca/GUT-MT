@@ -23,6 +23,8 @@ public class App extends SpringBootServletInitializer {
         SpringApplication.run(App.class, args);
     }
 
+
+
     @Configuration
     @Order(SecurityProperties.BASIC_AUTH_ORDER)
     protected static class SecurityConfiguration extends WebSecurityConfigurerAdapter {

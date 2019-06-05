@@ -1,4 +1,4 @@
-package torumpca.pl.gut.mt.algorithm.ship;
+package torumpca.pl.gut.mt.algorithm;
 
 import torumpca.pl.gut.mt.algorithm.model.Coordinates;
 import torumpca.pl.gut.mt.algorithm.model.VectorComponents;
@@ -6,7 +6,7 @@ import torumpca.pl.gut.mt.algorithm.model.VectorComponents;
 /**
  * Created by Tomasz Rumpca on 2016-04-12.
  */
-public interface Ship {
+public interface Craft {
 
     double getAverageSpeed();
 

@@ -2,11 +2,11 @@ package torumpca.pl.gut.mt.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import torumpca.pl.gut.mt.algorithm.ProblemResolver;
-import torumpca.pl.gut.mt.algorithm.ResolverFactory;
 import torumpca.pl.gut.mt.algorithm.model.AlgorithmInputData;
 import torumpca.pl.gut.mt.forecast.DataNotAvailableException;
 import torumpca.pl.gut.mt.forecast.ForecastDataAdapter;
@@ -24,6 +24,13 @@ public class SolutionController {
 
     private static Logger LOG = LoggerFactory.getLogger(SolutionController.class);
 
+    private final ProblemResolver resolver;
+
+    @Autowired
+    public SolutionController(ProblemResolver resolver) {
+        this.resolver = resolver;
+    }
+
     @RequestMapping(value = "solve", method = RequestMethod.POST)
     public ResponseEntity solve(@RequestBody AlgorithmInputData algorithmInputData,
                                 @RequestParam(required = false) boolean cachedData) {
@@ -40,11 +47,9 @@ public class SolutionController {
         try {
             forecast = adapter.getWindForecast(plannedDepartureDateTime);
         } catch (DataNotAvailableException e) {
-            LOG.error("Forecast not available.", e);
+            LOG.error("Forecast for {} not available", plannedDepartureDateTime, e);
             return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
         }
-
-        final ProblemResolver resolver = ResolverFactory.getResolver();
 
         return ResponseEntity.ok(resolver.resolve(forecast, algorithmInputData));
     }

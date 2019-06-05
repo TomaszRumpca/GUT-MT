@@ -9,11 +9,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-class NewShipTest {
+class NewCraftTest {
 
     @Test
     void calculateTravelCostWithNoWind() {
-        final NewShip newShip = new NewShip();
+        final NewCraft newShip = new NewCraft();
 
         // 54.5944444, 16.8538888
         final double ustkaLatitude = 54.5944444d;
@@ -41,7 +41,7 @@ class NewShipTest {
 
     @Test
     void calculateTravelCostWithFordewind() {
-        final NewShip newShip = new NewShip();
+        final NewCraft newShip = new NewCraft();
 
         // 54.5944444, 16.8538888
         final double ustkaLatitude = 54.5944444d;

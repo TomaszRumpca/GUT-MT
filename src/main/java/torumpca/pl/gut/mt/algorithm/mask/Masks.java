@@ -1,4 +1,4 @@
-package torumpca.pl.gut.mt.algorithm;
+package torumpca.pl.gut.mt.algorithm.mask;
 
 import torumpca.pl.gut.mt.algorithm.model.VectorComponents;
 import torumpca.pl.gut.mt.forecast.model.WindForecastModel;

@@ -1,7 +1,7 @@
 package torumpca.pl.gut.mt.algorithm.model;
 
-import torumpca.pl.gut.mt.algorithm.ship.SampleShip;
-import torumpca.pl.gut.mt.algorithm.ship.Ship;
+import torumpca.pl.gut.mt.algorithm.ship.SampleCraft;
+import torumpca.pl.gut.mt.algorithm.Craft;
 
 import java.time.LocalDateTime;
 
@@ -46,8 +46,8 @@ public class AlgorithmInputData {
         return destination.getLongitude();
     }
 
-    public Ship getShip() {
-        return new SampleShip();
+    public Craft getShip() {
+        return new SampleCraft();
     }
 
     public LocalDateTime getPlannedDepartureDateTime() {

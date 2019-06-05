@@ -2,6 +2,7 @@ package torumpca.pl.gut.mt.algorithm.ship;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import torumpca.pl.gut.mt.algorithm.Craft;
 import torumpca.pl.gut.mt.algorithm.Utils;
 import torumpca.pl.gut.mt.algorithm.model.Coordinates;
 import torumpca.pl.gut.mt.algorithm.model.VectorComponents;
@@ -9,12 +10,12 @@ import torumpca.pl.gut.mt.algorithm.model.VectorComponents;
 /**
  * Created by Tomasz Rumpca on 2016-04-22.
  */
-public class SampleShip implements Ship {
+public class SampleCraft implements Craft {
 
     private static final float AVERAGE_SPEED_IN_KNOTS = 20;
     private static final float AVERAGE_COST_OF_HOUR_ON_SEA = 3600;
     private static final String DEGREES = "\u00b0";
-    private static final Logger LOG = LoggerFactory.getLogger(SampleShip.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SampleCraft.class);
 
     public long calculateTravelTime(double distance, VectorComponents direction,
             VectorComponents wind) {

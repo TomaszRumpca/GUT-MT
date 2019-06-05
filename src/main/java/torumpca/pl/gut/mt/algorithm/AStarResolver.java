@@ -8,8 +8,10 @@ import es.usc.citius.hipster.model.problem.ProblemBuilder;
 import es.usc.citius.hipster.model.problem.SearchProblem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import torumpca.pl.gut.mt.algorithm.model.*;
-import torumpca.pl.gut.mt.algorithm.ship.Ship;
 import torumpca.pl.gut.mt.forecast.DataNotAvailableException;
 import torumpca.pl.gut.mt.forecast.model.WindForecastModel;
 
@@ -22,17 +24,28 @@ import java.util.stream.Collectors;
 /**
  * Created by Tomasz Rumpca on 2016-02-07.
  */
+@Service
+@Qualifier("AStar")
 public class AStarResolver implements ProblemResolver {
 
     private static Logger LOG = LoggerFactory.getLogger(AStarResolver.class);
 
-    private boolean[][] mask;
+    private final List<Mask> masks;
+    private WindForecastModel forecast;
+
+    @Autowired
+    public AStarResolver(List<Mask> masks) {
+        this.masks = masks;
+        List<String> registeredMasks = masks.stream().map(mask -> mask.getClass().getCanonicalName()).collect(Collectors.toList());
+        LOG.info("registered {} masks: {}", masks.size(), registeredMasks);
+    }
 
     public Solution resolve(final WindForecastModel forecast, AlgorithmInputData input) {
 
+        this.forecast = forecast;
         LOG.info("Start determining the solution using A* algorithm");
 
-        final Ship ship = input.getShip();
+        final Craft craft = input.getShip();
 
         final Coordinates originCoordinates = input.getOrigin();
         final Coordinates goalCoordinates = input.getDestination();
@@ -50,9 +63,6 @@ public class AStarResolver implements ProblemResolver {
 
         final VectorComponents[][] forecastData = forecast.getForecastData();
 
-        //mask = Masks.generateSimpleMask(forecast);
-        mask = Masks.getMaskAllValid(forecast);
-
         //@formatter:off
         SearchProblem problemDef = ProblemBuilder
                 .create()
@@ -60,9 +70,9 @@ public class AStarResolver implements ProblemResolver {
                 .defineProblemWithoutActions()
                 .useTransitionFunction(getTransitionFunction())
                 .useCostFunction(transition ->
-                        costFunction(forecast, ship, forecastData, transition))
+                        costFunction(forecast, craft, forecastData, transition))
                 .useHeuristicFunction((Point state) ->
-                        heuristicFunction(forecast, ship, goal, goalLocation, state))
+                        heuristicFunction(forecast, craft, goal, goalLocation, state))
                 .build();
         //@formatter:on
 
@@ -81,27 +91,33 @@ public class AStarResolver implements ProblemResolver {
      * @param shipPosition punkt z którego wyznaczane są następne możliwe przejścia
      * @return zbiór punktów które mogą zostać odwiedzone w następnym kroku algorytmu, bezpośredni sąsiedzi shipPosition
      */
-    private Collection<Point> validLocationsFrom(Point shipPosition) {
+    private Collection<Point> validLocationsFrom(WindForecastModel forecastModel, Point shipPosition) {
         Collection<Point> validMoves = new HashSet<>();
         // Check for all valid movements
         for (int row = -1; row <= 1; row++) {
             for (int column = -1; column <= 1; column++) {
-                try {
-                    if (isFree(new Point(shipPosition.x + column, shipPosition.y + row))) {
-                        validMoves.add(new Point(shipPosition.x + column, shipPosition.y + row));
+                if (row != 0 || column != 0) {
+                    final Point predictedPosition = new Point(shipPosition.x + column, shipPosition.y + row);
+
+                    boolean allowed = true;
+                    for (Mask mask : masks) {
+                        Coordinates source = forecastModel.getLatLonFromPoint(shipPosition);
+                        Coordinates target = forecastModel.getLatLonFromPoint(predictedPosition);
+                        boolean allowedByCurrentMask = mask.isAllowed(source, target);
+                        if(!allowedByCurrentMask){
+                            LOG.info("Move ({}) -> ({}) disallowed by {}", source, target, mask.getClass().getCanonicalName());
+                            allowed = false;
+                            break;
+                        }
                     }
-                } catch (ArrayIndexOutOfBoundsException ex) {
-                    // Invalid move!
+
+                    if (allowed) {
+                        validMoves.add(predictedPosition);
+                    }
                 }
             }
         }
-        validMoves.remove(shipPosition);
-
         return validMoves;
-    }
-
-    private boolean isFree(Point point) {
-        return mask[point.x][point.y];
     }
 
     private Solution getSolution(Algorithm.SearchResult result, WindForecastModel forecast) {
@@ -122,12 +138,12 @@ public class AStarResolver implements ProblemResolver {
         return new StateTransitionFunction<Point>() {
             @Override
             public Iterable<Point> successorsOf(Point state) {
-                return validLocationsFrom(state);
+                return validLocationsFrom(forecast, state);
             }
         };
     }
 
-    private Double costFunction(WindForecastModel forecast, Ship ship, VectorComponents[][] forecastData, Transition<Void, Point> transition) {
+    private Double costFunction(WindForecastModel forecast, Craft craft, VectorComponents[][] forecastData, Transition<Void, Point> transition) {
         final Point source = transition.getFromState();
         final Point destination = transition.getState();
 
@@ -141,15 +157,15 @@ public class AStarResolver implements ProblemResolver {
         final VectorComponents wind = forecastData[source.x][source.y];
 
         final Double cost =
-                ship.calculateTravelCost(sourceLocation, destLocation, wind);
+                craft.calculateTravelCost(sourceLocation, destLocation, wind);
         LOG.debug("COST - from {} to {} cost {}", source, destination, cost);
         return cost;
     }
 
-    private Double heuristicFunction(WindForecastModel forecast, Ship ship, Point goal, Coordinates goalLocation, Point state) {
+    private Double heuristicFunction(WindForecastModel forecast, Craft craft, Point goal, Coordinates goalLocation, Point state) {
         final Coordinates currentLocation = forecast.getLatLonFromPoint(state);
         final double distance = Utils.getGreatCircleDistance(currentLocation, goalLocation);
-        final Double estimatedCost = distance / ship.getAverageSpeedInMpS() * ship
+        final Double estimatedCost = distance / craft.getAverageSpeedInMpS() * craft
                 .getAverageCostOfHourOnSea() / 3600;
         LOG.debug(
                 "HEURISTIC - from {} to target in {} estimated cost {} distance {}",

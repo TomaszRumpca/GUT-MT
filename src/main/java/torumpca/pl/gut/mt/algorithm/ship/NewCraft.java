@@ -1,11 +1,12 @@
 package torumpca.pl.gut.mt.algorithm.ship;
 
+import torumpca.pl.gut.mt.algorithm.Craft;
 import torumpca.pl.gut.mt.algorithm.Utils;
 import torumpca.pl.gut.mt.algorithm.model.Coordinates;
 import torumpca.pl.gut.mt.algorithm.model.VectorComponents;
 
 @SuppressWarnings("UnnecessaryLocalVariable")
-public class NewShip implements Ship {
+public class NewCraft implements Craft {
 
     @Override
     public double getAverageSpeed() {

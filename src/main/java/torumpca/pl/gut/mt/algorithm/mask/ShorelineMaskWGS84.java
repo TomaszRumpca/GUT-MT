@@ -20,7 +20,7 @@ public class ShorelineMaskWGS84 implements Mask {
 
     private final static Logger LOG = LoggerFactory.getLogger(ShorelineMaskWGS84.class);
 
-    private static final String SHORELINE_FILE_NAME = "shoreline-WGS84.txt";
+    private static final String SHORELINE_FILE_NAME = "shoreline-Poland-WGS84.txt";
 
     private final GeometryLoader geometryLoader = new GeometryLoader();
     private LineString shoreline;

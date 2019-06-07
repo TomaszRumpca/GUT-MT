@@ -20,6 +20,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class KsgMetAdapter extends AbstractKsgMetAdapter {
         requiredForecastFiles.add(V_WIND_DATA_FILE_NAME);
     }
 
-    public WindForecastModel getWindForecast(LocalDateTime dateTime)
+    public WindForecastModel getWindForecast(ZonedDateTime dateTime)
             throws DataNotAvailableException {
 
         LOG.info("fetching forecast for {}", dateTime);

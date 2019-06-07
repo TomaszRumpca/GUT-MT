@@ -41,8 +41,8 @@ public class AStarResolver implements ProblemResolver {
 
     public Solution resolve(final WindForecastModel forecast, AlgorithmInputData input) {
 
-        double lonStep = forecast.getMetaData().getLonStep();
-        double latStep = forecast.getMetaData().getLatStep();
+        double lonStep = forecast.getMetaData().getLonStep() / 10;
+        double latStep = forecast.getMetaData().getLatStep() / 10;
 
         double maxMoveDistance = Math.sqrt(lonStep * lonStep + latStep * latStep);
 

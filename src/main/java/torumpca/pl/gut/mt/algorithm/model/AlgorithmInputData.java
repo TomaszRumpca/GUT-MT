@@ -4,6 +4,7 @@ import torumpca.pl.gut.mt.algorithm.ship.SampleCraft;
 import torumpca.pl.gut.mt.algorithm.Craft;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * Created by Tomasz Rumpca on 2016-04-11.
@@ -12,7 +13,7 @@ public class AlgorithmInputData {
 
     private Coordinates origin;
     private Coordinates destination;
-    private LocalDateTime plannedDepartureDateTime;
+    private ZonedDateTime plannedDepartureDateTime;
 
     public Coordinates getOrigin() {
         return origin;
@@ -50,11 +51,11 @@ public class AlgorithmInputData {
         return new SampleCraft();
     }
 
-    public LocalDateTime getPlannedDepartureDateTime() {
+    public ZonedDateTime getPlannedDepartureDateTime() {
         return plannedDepartureDateTime;
     }
 
-    public void setPlannedDepartureDateTime(LocalDateTime plannedDepartureDateTime) {
+    public void setPlannedDepartureDateTime(ZonedDateTime plannedDepartureDateTime) {
         this.plannedDepartureDateTime = plannedDepartureDateTime;
     }
 }

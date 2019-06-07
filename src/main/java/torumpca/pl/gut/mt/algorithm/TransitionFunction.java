@@ -19,7 +19,7 @@ public class TransitionFunction extends StateTransitionFunction<Coordinates> {
     private final double maxMoveDistance;
     private final Coordinates goal;
 
-    public TransitionFunction(List<Mask> masks, double latStep, double lonStep, double maxMoveDistance, Coordinates goal) {
+    TransitionFunction(List<Mask> masks, double latStep, double lonStep, double maxMoveDistance, Coordinates goal) {
         this.masks = masks;
         this.goal = goal;
         this.latStep = latStep;

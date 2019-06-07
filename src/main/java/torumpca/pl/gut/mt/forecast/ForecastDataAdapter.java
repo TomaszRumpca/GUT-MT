@@ -3,8 +3,8 @@ package torumpca.pl.gut.mt.forecast;
 import torumpca.pl.gut.mt.forecast.model.WindForecastMetaData;
 import torumpca.pl.gut.mt.forecast.model.WindForecastModel;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface ForecastDataAdapter {
 
-    WindForecastModel getWindForecast(LocalDateTime dateTime) throws DataNotAvailableException;
+    WindForecastModel getWindForecast(ZonedDateTime dateTime) throws DataNotAvailableException;
 
     WindForecastMetaData getWindForecastMetaData(Integer year) throws DataNotAvailableException;
 

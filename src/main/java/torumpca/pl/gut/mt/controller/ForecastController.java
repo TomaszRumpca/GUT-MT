@@ -2,6 +2,7 @@ package torumpca.pl.gut.mt.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,10 +15,8 @@ import torumpca.pl.gut.mt.forecast.ForecastDataAdapterFactory;
 import torumpca.pl.gut.mt.forecast.model.WindForecastMetaData;
 import torumpca.pl.gut.mt.forecast.model.WindForecastModel;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @RestController
@@ -26,9 +25,16 @@ public class ForecastController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ForecastController.class);
 
+    private final ForecastDataAdapterFactory adapterFactory;
+
+    @Autowired
+    public ForecastController(ForecastDataAdapterFactory adapterFactory) {
+        this.adapterFactory = adapterFactory;
+    }
+
     @RequestMapping(value = "dates", method = RequestMethod.GET)
     public List<OffsetDateTime> getForecastAvailableDates(@RequestParam(required = false) boolean cachedData) {
-        return ForecastDataAdapterFactory.getDataAdapter(cachedData).getForecastAvailableDates();
+        return adapterFactory.getDataAdapter(cachedData).getForecastAvailableDates();
     }
 
     @RequestMapping(value = "meta", method = RequestMethod.GET)
@@ -36,7 +42,7 @@ public class ForecastController {
                                                         @RequestParam(required = false) boolean cachedData) {
         WindForecastMetaData forecastMetaData = null;
 
-        final ForecastDataAdapter adapter = ForecastDataAdapterFactory.getDataAdapter(cachedData);
+        final ForecastDataAdapter adapter = adapterFactory.getDataAdapter(cachedData);
 
         try {
             forecastMetaData = adapter.getWindForecastMetaData(year);
@@ -49,14 +55,13 @@ public class ForecastController {
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getWindForecastMetaData(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) ZonedDateTime utcDate,
             @RequestParam(required = false) Integer hour,
             @RequestParam(required = false) boolean cachedData) {
-        final ForecastDataAdapter adapter = ForecastDataAdapterFactory.getDataAdapter(cachedData);
+        final ForecastDataAdapter adapter = adapterFactory.getDataAdapter(cachedData);
 
-        final LocalTime time = hour != null ? LocalTime.of(hour, 0) : LocalTime.of(0, 0);
         try {
-            final WindForecastModel windForecast = adapter.getWindForecast(LocalDateTime.of(date, time));
+            final WindForecastModel windForecast = adapter.getWindForecast(utcDate);
             return ResponseEntity.ok(windForecast);
         } catch (DataNotAvailableException e) {
             LOG.error("Forecast meta data not available", e);

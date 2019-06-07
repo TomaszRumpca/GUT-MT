@@ -16,6 +16,7 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class FileAdapter extends AbstractKsgMetAdapter {
 
     private final static Logger LOG = LoggerFactory.getLogger(FileAdapter.class);
 
-    public WindForecastModel getWindForecast(LocalDateTime dateTime)
+    public WindForecastModel getWindForecast(ZonedDateTime dateTime)
             throws DataNotAvailableException {
 
         WindForecastModel forecastModel = new WindForecastModel();

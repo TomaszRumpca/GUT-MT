@@ -20,10 +20,9 @@ public class HeuristicCostFunction implements HeuristicFunction<Coordinates, Dou
     @Override
     public Double estimate(Coordinates currentLocation) {
         final double distance = Utils.getGreatCircleDistance(currentLocation, goal);
-        final Double estimatedCost = distance / craft.getAverageSpeedInMpS() * craft
-                .getAverageCostOfHourOnSea() / 3600;
-        LOG.debug(
-                "HEURISTIC - from {} to target in {} estimated cost {} distance {}",
+        final Double estimatedCost =
+                distance / craft.getAverageSpeedInMpS() * craft.getAverageCostOfHourOnSea() / 3600;
+        LOG.debug("HEURISTIC - from {} to target in {} estimated cost {} distance {}",
                 currentLocation, goal, estimatedCost, distance);
         return estimatedCost;
     }

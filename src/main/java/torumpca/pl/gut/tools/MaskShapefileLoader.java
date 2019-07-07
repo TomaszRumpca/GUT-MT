@@ -1,6 +1,8 @@
 package torumpca.pl.gut.tools;
 
-import org.geotools.data.*;
+import org.geotools.data.FileDataStore;
+import org.geotools.data.FileDataStoreFinder;
+import org.geotools.data.Query;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
@@ -39,7 +41,7 @@ public class MaskShapefileLoader {
         LOG.info("Application started, please selected a shape file to load");
 
         // display a data store file chooser dialog for shapefiles
-//        File file = JFileDataStoreChooser.showOpenFile("shp", null);
+        //        File file = JFileDataStoreChooser.showOpenFile("shp", null);
         File file = new File("C:/DATA/magisterka/MASKA/CLC2018/clc18_PL.shp");
         if (file == null) {
             return;
@@ -86,10 +88,14 @@ public class MaskShapefileLoader {
         Layer layer = new FeatureLayer(features, style);
         map.addLayer(layer);
 
-//        459267.0828999998 799634.0013999995, 459472.9787999997 799613.2611999996
-        LineString lineString2 = geometryLoader.readLineString("LINESTRING(479267.0828999998 779634.0013999995, 479472.9787999997 749613.2611999996)");
+        //        459267.0828999998 799634.0013999995, 459472.9787999997 799613.2611999996
+        LineString lineString2 = geometryLoader.readLineString(
+                "LINESTRING(479267.0828999998 779634.0013999995, 479472.9787999997 749613"
+                + ".2611999996)");
 
-        MultiPolygon lineString = geometryLoader.readMultiPolygonFromFile("C:\\Users\\torumpca\\IdeaProjects\\GUT-MT\\src\\main\\resources\\shoreline-ETRS89.txt");
+        MultiPolygon lineString = geometryLoader.readMultiPolygonFromFile(
+                "C:\\Users\\torumpca\\IdeaProjects\\GUT-MT\\src\\main\\resources\\shoreline"
+                + "-ETRS89.txt");
 
 
         FeatureLayer featureLayer = getFeatureLayer(featureSource, lineString);
@@ -114,7 +120,8 @@ public class MaskShapefileLoader {
         JMapFrame.showMap(map);
     }
 
-    private static FeatureLayer getFeatureLayer(SimpleFeatureSource featureSource, Object geometry) {
+    private static FeatureLayer getFeatureLayer(SimpleFeatureSource featureSource,
+            Object geometry) {
         SimpleFeatureType featureType = featureSource.getSchema();
 
         SimpleFeatureBuilder simpleFeatureBuilder = new SimpleFeatureBuilder(featureType);

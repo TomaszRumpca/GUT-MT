@@ -29,7 +29,8 @@ import java.util.List;
  */
 public class KsgMetAdapter extends AbstractKsgMetAdapter {
 
-    private static final String KSG_MET_BASE_URL = "http://ksgmet.eti.pg.gda.pl/prognozy/CSV/poland";
+    private static final String KSG_MET_BASE_URL =
+            "http://ksgmet.eti.pg.gda.pl/prognozy/CSV/poland";
     private static final String META_DATA_FILE_NAME = "current.nfo";
     private static final String U_WIND_DATA_FILE_NAME = "U_WIND_ON_10M.csv";
     private static final String V_WIND_DATA_FILE_NAME = "V_WIND_ON_10M.csv";
@@ -58,13 +59,15 @@ public class KsgMetAdapter extends AbstractKsgMetAdapter {
             int uDataCount = dsm.getMetaData().getLatDataCount();
             int vDataCount = dsm.getMetaData().getLonDataCount();
 
-            URL urlWindU = new URL(Joiner.on("/")
+            URL urlWindU = new URL(Joiner
+                    .on("/")
                     .join(KSG_MET_BASE_URL, dateTime.getYear(), dateTime.getMonthValue(),
                             dateTime.getDayOfMonth(), dateTime.getHour(), U_WIND_DATA_FILE_NAME));
             URLConnection windU = urlWindU.openConnection();
             InputStream windUIS = windU.getInputStream();
 
-            URL urlWindV = new URL(Joiner.on("/")
+            URL urlWindV = new URL(Joiner
+                    .on("/")
                     .join(KSG_MET_BASE_URL, dateTime.getYear(), dateTime.getMonthValue(),
                             dateTime.getDayOfMonth(), dateTime.getHour(), V_WIND_DATA_FILE_NAME));
             URLConnection windV = urlWindV.openConnection();
@@ -85,21 +88,23 @@ public class KsgMetAdapter extends AbstractKsgMetAdapter {
     }
 
     @Override
-    public WindForecastMetaData getWindForecastMetaData(Integer requestedYear) throws DataNotAvailableException {
+    public WindForecastMetaData getWindForecastMetaData(Integer requestedYear)
+            throws DataNotAvailableException {
         InputStream metaDataIS;
 
         final Integer year = requestedYear != null ? requestedYear : LocalDateTime.now().getYear();
 
         try {
-            final URL urlMetaInfo = new URL(Joiner.on("/")
-                    .join(KSG_MET_BASE_URL, year, META_DATA_FILE_NAME));
+            final URL urlMetaInfo =
+                    new URL(Joiner.on("/").join(KSG_MET_BASE_URL, year, META_DATA_FILE_NAME));
             final URLConnection metaInfo = urlMetaInfo.openConnection();
             metaDataIS = metaInfo.getInputStream();
             return getWindForecastMetaData(metaDataIS);
         } catch (MalformedURLException e) {
             throw new DataNotAvailableException("Invalid URL to meta data file", e);
         } catch (IOException e) {
-            throw new DataNotAvailableException("Could not fetch forecast meta data from KsgMet", e);
+            throw new DataNotAvailableException("Could not fetch forecast meta data from KsgMet",
+                    e);
         }
     }
 
@@ -111,7 +116,10 @@ public class KsgMetAdapter extends AbstractKsgMetAdapter {
             for (String month : collectAvailableMonths(KSG_MET_BASE_URL, year)) {
                 for (String day : collectAvailableDays(KSG_MET_BASE_URL, year, month)) {
                     for (String hour : collectAvailableHours(KSG_MET_BASE_URL, year, month, day)) {
-                        final OffsetDateTime availableForecast = OffsetDateTime.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day), Integer.parseInt(hour), 0, 0, 0, OffsetDateTime.now().getOffset());
+                        final OffsetDateTime availableForecast =
+                                OffsetDateTime.of(Integer.parseInt(year), Integer.parseInt(month),
+                                        Integer.parseInt(day), Integer.parseInt(hour), 0, 0, 0,
+                                        OffsetDateTime.now().getOffset());
                         if (validate(availableForecast)) {
                             availableForecasts.add(availableForecast);
                         }
@@ -124,12 +132,17 @@ public class KsgMetAdapter extends AbstractKsgMetAdapter {
     }
 
     private boolean validate(OffsetDateTime availableForecast) {
-        final List<String> availableForecastFiles = collectAvailableDirectories(Joiner.on('/').join(KSG_MET_BASE_URL, availableForecast.getYear(), availableForecast.getMonth().getValue(), availableForecast.getDayOfMonth(), availableForecast.getHour()));
+        final List<String> availableForecastFiles = collectAvailableDirectories(Joiner
+                .on('/')
+                .join(KSG_MET_BASE_URL, availableForecast.getYear(),
+                        availableForecast.getMonth().getValue(), availableForecast.getDayOfMonth(),
+                        availableForecast.getHour()));
         return availableForecastFiles.containsAll(requiredForecastFiles);
     }
 
 
-    private List<String> collectAvailableHours(String ksgMetBaseUrl, String year, String month, String day) {
+    private List<String> collectAvailableHours(String ksgMetBaseUrl, String year, String month,
+            String day) {
         return collectAvailableDirectories(Joiner.on('/').join(ksgMetBaseUrl, year, month, day));
     }
 
@@ -151,7 +164,8 @@ public class KsgMetAdapter extends AbstractKsgMetAdapter {
                 final String name = directoryName.ownText();
                 LOG.info("dirname: '{}'", name);
                 if (!name.equals("Parent Directory") && !name.equals("current.nfo")) {
-                    final String cleanName = name.endsWith("/") ? name.substring(0, name.length() - 1) : name;
+                    final String cleanName =
+                            name.endsWith("/") ? name.substring(0, name.length() - 1) : name;
                     dirs.add(cleanName);
                 }
             }

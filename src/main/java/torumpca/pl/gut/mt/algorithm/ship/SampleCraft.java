@@ -26,7 +26,7 @@ public class SampleCraft implements Craft {
         return AVERAGE_SPEED_IN_KNOTS;
     }
 
-    public double getAverageSpeedInMpS(){
+    public double getAverageSpeedInMpS() {
         return Utils.knotsToMetersPerSecond(getMaxSideWindSpeed());
     }
 
@@ -39,7 +39,8 @@ public class SampleCraft implements Craft {
     }
 
     @Override
-    public double calculateTravelCost(Coordinates from, Coordinates to, VectorComponents windComponents) {
+    public double calculateTravelCost(Coordinates from, Coordinates to,
+            VectorComponents windComponents) {
 
         final double azimuth = Utils.getAzimuth(from, to);
         final double normalizedAzimuth = (azimuth + 2 * Math.PI) % (2 * Math.PI);
@@ -47,20 +48,16 @@ public class SampleCraft implements Craft {
         final double rotationAngle = -(normalizedAzimuth - Math.PI / 2);
         final VectorComponents normalizedWindComponents =
                 Utils.rotateVector(rotationAngle, windComponents);
-        LOG.debug(
-                "COST - normAzimuth {}{}, rotation {}{}, norm wind components {},"
-                        + " origin wind {}",
-                Math.toDegrees(normalizedAzimuth), DEGREES,
-                Math.toDegrees(rotationAngle), DEGREES, normalizedWindComponents,
-                windComponents);
+        LOG.debug("COST - normAzimuth {}{}, rotation {}{}, norm wind components {},"
+                  + " origin wind {}", Math.toDegrees(normalizedAzimuth), DEGREES,
+                Math.toDegrees(rotationAngle), DEGREES, normalizedWindComponents, windComponents);
 
         final double distance = Utils.getGreatCircleDistance(from, to);
         return calculateTravelCost(distance, normalizedWindComponents);
     }
 
     /**
-     *
-     * @param distance zadany dystans do pokonania
+     * @param distance       zadany dystans do pokonania
      * @param windComponents znormalizowanie względem azymutu składowe wiatru w m/s
      * @return koszt przepłynięcia zadanego dystansu
      */
@@ -71,26 +68,27 @@ public class SampleCraft implements Craft {
         if (windComponents.v >= getAverageSpeedInMpS()) {
             return Double.MAX_VALUE;
         }
-        final double windSpeed = Math.sqrt(sideWind*sideWind + backWind*backWind);
+        final double windSpeed = Math.sqrt(sideWind * sideWind + backWind * backWind);
         final double windMaxSpeedInMpS = Utils.knotsToMetersPerSecond(getMaxWindSpeed());
-        if (windSpeed >= windMaxSpeedInMpS){
+        if (windSpeed >= windMaxSpeedInMpS) {
             return Double.MAX_VALUE;
         }
 
-        final double windPercentageDeps = backWind/windMaxSpeedInMpS;
+        final double windPercentageDeps = backWind / windMaxSpeedInMpS;
         final double avgSpeedInMpS = Utils.knotsToMetersPerSecond(getAverageSpeed());
         final double travelTimeInSeconds = distance / avgSpeedInMpS;
 
         final double maxWindDeps = 0.3d;
 
-        final double correctedTravelTime = travelTimeInSeconds * (1 + (maxWindDeps * windPercentageDeps));
+        final double correctedTravelTime =
+                travelTimeInSeconds * (1 + (maxWindDeps * windPercentageDeps));
 
-//        return correctedTravelTime * AVERAGE_COST_OF_HOUR_ON_SEA / 3600;
-        return 1;
+        return correctedTravelTime * AVERAGE_COST_OF_HOUR_ON_SEA / 3600;
+        //        return 1;
     }
 
 
-    public double getAverageCostOfHourOnSea(){
+    public double getAverageCostOfHourOnSea() {
         return AVERAGE_COST_OF_HOUR_ON_SEA;
     }
 

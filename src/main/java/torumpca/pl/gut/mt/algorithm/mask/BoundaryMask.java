@@ -1,10 +1,9 @@
 package torumpca.pl.gut.mt.algorithm.mask;
 
-import org.springframework.stereotype.Service;
 import torumpca.pl.gut.mt.algorithm.Mask;
 import torumpca.pl.gut.mt.algorithm.model.Coordinates;
 
-@Service
+
 public class BoundaryMask implements Mask {
 
     @Override

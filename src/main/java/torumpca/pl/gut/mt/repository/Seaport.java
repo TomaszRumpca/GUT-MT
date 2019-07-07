@@ -31,7 +31,7 @@ public class Seaport {
         this.longitude = longitude;
     }
 
-    public Seaport(){
+    public Seaport() {
     }
 
     public String getName() {

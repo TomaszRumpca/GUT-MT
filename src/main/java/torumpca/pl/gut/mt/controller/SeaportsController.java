@@ -19,7 +19,8 @@ public class SeaportsController {
         this.seaportRepository = seaportRepository;
     }
 
-    @RequestMapping(value = "seaport", method = RequestMethod.GET)
+    @RequestMapping(value = "seaport",
+                    method = RequestMethod.GET)
     public List<Seaport> getAllSeaports() {
         return seaportRepository.findAll();
     }

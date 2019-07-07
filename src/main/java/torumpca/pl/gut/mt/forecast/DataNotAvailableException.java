@@ -7,15 +7,15 @@ import java.text.MessageFormat;
  */
 public class DataNotAvailableException extends Exception {
 
-    public DataNotAvailableException(String errorMessage){
+    public DataNotAvailableException(String errorMessage) {
         super(errorMessage);
     }
 
-    public DataNotAvailableException(String errorMessage, Throwable cause){
+    public DataNotAvailableException(String errorMessage, Throwable cause) {
         super(errorMessage, cause);
     }
 
-    public DataNotAvailableException(String errorMessage, Throwable cause, String... args){
+    public DataNotAvailableException(String errorMessage, Throwable cause, String... args) {
         super(MessageFormat.format(errorMessage, args), cause);
     }
 

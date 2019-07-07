@@ -19,7 +19,8 @@ public class TransitionFunction extends StateTransitionFunction<Coordinates> {
     private final double maxMoveDistance;
     private final Coordinates goal;
 
-    TransitionFunction(List<Mask> masks, double latStep, double lonStep, double maxMoveDistance, Coordinates goal) {
+    TransitionFunction(List<Mask> masks, double latStep, double lonStep, double maxMoveDistance,
+            Coordinates goal) {
         this.masks = masks;
         this.goal = goal;
         this.latStep = latStep;
@@ -28,10 +29,12 @@ public class TransitionFunction extends StateTransitionFunction<Coordinates> {
     }
 
     /**
-     * szuka punktow w najblizszym otoczeniu statku które mogą stać się następnym elementem na jesgo ścieżce.
+     * szuka punktow w najblizszym otoczeniu statku które mogą stać się następnym elementem na jesgo
+     * ścieżce.
      *
      * @param shipPosition punkt z którego wyznaczane są następne możliwe przejścia
-     * @return zbiór punktów które mogą zostać odwiedzone w następnym kroku algorytmu, bezpośredni sąsiedzi shipPosition
+     * @return zbiór punktów które mogą zostać odwiedzone w następnym kroku algorytmu, bezpośredni
+     * sąsiedzi shipPosition
      */
     @Override
     public Iterable<Coordinates> successorsOf(Coordinates shipPosition) {
@@ -42,13 +45,17 @@ public class TransitionFunction extends StateTransitionFunction<Coordinates> {
             for (double column = -latStep; column <= latStep; column += latStep) {
                 if (row != 0 || column != 0) {
 
-                    Coordinates predictedCoordinates = new Coordinates(shipPosition.latitude + column, shipPosition.longitude + row);
+                    Coordinates predictedCoordinates =
+                            new Coordinates(shipPosition.latitude + column,
+                                    shipPosition.longitude + row);
 
                     boolean allowed = true;
                     for (Mask mask : masks) {
-                        boolean allowedByCurrentMask = mask.isAllowed(shipPosition, predictedCoordinates);
+                        boolean allowedByCurrentMask =
+                                mask.isAllowed(shipPosition, predictedCoordinates);
                         if (!allowedByCurrentMask) {
-                            LOG.info("Move ({}) -> ({}) disallowed by {}", shipPosition, predictedCoordinates, mask.getClass().getCanonicalName());
+                            LOG.info("Move ({}) -> ({}) disallowed by {}", shipPosition,
+                                    predictedCoordinates, mask.getClass().getCanonicalName());
                             allowed = false;
                             break;
                         }
@@ -64,7 +71,8 @@ public class TransitionFunction extends StateTransitionFunction<Coordinates> {
         double deltaLatitude = shipPosition.latitude - goal.latitude;
         double deltaLongitude = shipPosition.longitude - goal.longitude;
 
-        double distanceToGoal = Math.sqrt(deltaLatitude * deltaLatitude + deltaLongitude * deltaLongitude);
+        double distanceToGoal =
+                Math.sqrt(deltaLatitude * deltaLatitude + deltaLongitude * deltaLongitude);
 
         if (distanceToGoal < maxMoveDistance) {
             validMoves.add(goal);

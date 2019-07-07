@@ -43,7 +43,8 @@ public class NewCraft implements Craft {
         final double noWindSpeed = getAverageSpeed();
 
         // oszacowana predkosc jednostki
-        final double windInfluencedSpeed = calculateWindInfluencedCourse(courseToSteer, noWindSpeed, wind);
+        final double windInfluencedSpeed =
+                calculateWindInfluencedCourse(courseToSteer, noWindSpeed, wind);
 
         if (windInfluencedSpeed != 0) {
             // dystans do pokonania
@@ -58,7 +59,8 @@ public class NewCraft implements Craft {
         }
     }
 
-    private double calculateWindInfluencedCourse(double courseToSteer, double noWindSpeed, VectorComponents wind) {
+    private double calculateWindInfluencedCourse(double courseToSteer, double noWindSpeed,
+            VectorComponents wind) {
 
         final double normalizedAzimuth = (courseToSteer + 2 * Math.PI) % (2 * Math.PI);
 
@@ -79,7 +81,8 @@ public class NewCraft implements Craft {
             return 0d;
         }
 
-        final double estimatedSpeed = noWindSpeed + normalizedWindComponents.u / getMaxWindSpeed() * 0.2d * noWindSpeed;
+        final double estimatedSpeed =
+                noWindSpeed + normalizedWindComponents.u / getMaxWindSpeed() * 0.2d * noWindSpeed;
 
         return estimatedSpeed;
     }

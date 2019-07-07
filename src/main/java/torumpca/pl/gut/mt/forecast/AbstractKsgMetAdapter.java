@@ -23,7 +23,7 @@ public abstract class AbstractKsgMetAdapter implements ForecastDataAdapter {
     private final static Logger LOG = LoggerFactory.getLogger(AbstractKsgMetAdapter.class);
 
     protected VectorComponents[][] getWindForecastData(int uDataCount, int vDataCount,
-                                                       InputStream uWindData, InputStream vWindData) throws DataNotAvailableException {
+            InputStream uWindData, InputStream vWindData) throws DataNotAvailableException {
 
         VectorComponents[][] forecastData = new VectorComponents[uDataCount][vDataCount];
 

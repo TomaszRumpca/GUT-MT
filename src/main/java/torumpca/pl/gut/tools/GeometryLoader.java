@@ -21,12 +21,14 @@ public class GeometryLoader {
         return (MultiPolygon) loadWKTString(wkt);
     }
 
-    public LineString readLineStringFromFile(String wktFileName) throws ParseException, FileNotFoundException {
+    public LineString readLineStringFromFile(String wktFileName)
+            throws ParseException, FileNotFoundException {
         File file = new File(wktFileName);
         return (LineString) loadWKTFile(file);
     }
 
-    public MultiPolygon readMultiPolygonFromFile(String wktFileName) throws ParseException, FileNotFoundException {
+    public MultiPolygon readMultiPolygonFromFile(String wktFileName)
+            throws ParseException, FileNotFoundException {
         File file = new File(wktFileName);
         return (MultiPolygon) loadWKTFile(file);
     }
@@ -37,7 +39,8 @@ public class GeometryLoader {
         return reader.read(wellKnownText);
     }
 
-    private static Object loadWKTFile(File wellKnownTextFile) throws ParseException, FileNotFoundException {
+    private static Object loadWKTFile(File wellKnownTextFile)
+            throws ParseException, FileNotFoundException {
         GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
         WKTReader reader = new WKTReader(geometryFactory);
         FileReader wktFileReader = new FileReader(wellKnownTextFile);

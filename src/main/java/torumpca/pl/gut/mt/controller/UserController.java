@@ -2,7 +2,12 @@ package torumpca.pl.gut.mt.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.authentication.UserCredentials;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import torumpca.pl.gut.mt.repository.User;
 import torumpca.pl.gut.mt.repository.UserRepository;
 
@@ -20,24 +25,27 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @RequestMapping(value = "register", method = RequestMethod.POST)
+    @RequestMapping(value = "register",
+                    method = RequestMethod.POST)
     public User register(@RequestBody User user) {
         return userRepository.save(user);
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "{id}",
+                    method = RequestMethod.GET)
     public User getUserById(@PathVariable("id") long id) {
         return userRepository.findById(id);
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "{id}",
+                    method = RequestMethod.DELETE)
     public User deleteUser(@PathVariable("id") long id) {
         return userRepository.deleteById(id);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     public User updateUser(@RequestBody User user) {
-//        return userRepository.update(user);
+        //        return userRepository.update(user);
         return null;
     }
 
@@ -46,7 +54,8 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    @RequestMapping(value = "authenticate", method = RequestMethod.POST)
+    @RequestMapping(value = "authenticate",
+                    method = RequestMethod.POST)
     public boolean authenticate(@RequestBody UserCredentials credentials) {
         User user = userRepository.findByUsername(credentials.getUsername());
         return user.getPassword().equals(credentials.getPassword());

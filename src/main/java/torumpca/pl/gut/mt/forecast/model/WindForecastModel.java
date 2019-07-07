@@ -21,15 +21,16 @@ public class WindForecastModel {
 
     public Point getPointFromLatLon(Coordinates coordinates) throws DataNotAvailableException {
         final Point point = new Point();
-        point.x = (int) ((coordinates.latitude - metaData.getLeftBottomLatCoordinate()) / metaData
-                .getLatStep());
-        point.y = (int) ((coordinates.longitude - metaData.getLeftBottomLonCoordinate()) / metaData
-                .getLonStep());
+        point.x = (int) ((coordinates.latitude - metaData.getLeftBottomLatCoordinate())
+                         / metaData.getLatStep());
+        point.y = (int) ((coordinates.longitude - metaData.getLeftBottomLonCoordinate())
+                         / metaData.getLonStep());
 
         if (point.x < 0 || point.x > metaData.getLatDataCount() || point.y < 0 || point.y > metaData
                 .getLonDataCount()) {
-            throw new DataNotAvailableException(MessageFormat
-                    .format("Forecast does not contain data for location {0}", coordinates));
+            throw new DataNotAvailableException(
+                    MessageFormat.format("Forecast does not contain data for location {0}",
+                            coordinates));
         }
         return point;
     }

@@ -20,8 +20,9 @@ public class Utils {
         final double toLonRad = Math.toRadians(to.longitude);
 
         final double y = Math.sin(toLonRad - fromLonRad) * Math.cos(toLatRad);
-        final double x = Math.cos(fromLatRad) * Math.sin(toLatRad) -
-                Math.sin(fromLatRad) * Math.cos(toLatRad) * Math.cos(toLonRad - fromLonRad);
+        final double x =
+                Math.cos(fromLatRad) * Math.sin(toLatRad) - Math.sin(fromLatRad) * Math.cos(
+                        toLatRad) * Math.cos(toLonRad - fromLonRad);
         return Math.atan2(y, x);
     }
 
@@ -50,7 +51,8 @@ public class Utils {
 
 
     //TODO make earth radious configurable
-    public static double getGreatCircleDistance(Coordinates sourceLocation, Coordinates destLocation) {
+    public static double getGreatCircleDistance(Coordinates sourceLocation,
+            Coordinates destLocation) {
 
         final double earthR = 6371000; // metres
 
@@ -62,9 +64,9 @@ public class Utils {
         final double deltaLat = toLatRad - fromLatRad;
         final double deltaLon = toLonRad - fromLonRad;
 
-        double a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-                Math.cos(fromLatRad) * Math.cos(toLatRad) *
-                        Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+        double a =
+                Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) + Math.cos(fromLatRad) * Math.cos(
+                        toLatRad) * Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         return earthR * c;
@@ -74,7 +76,8 @@ public class Utils {
         return Math.sqrt(Math.pow(vectorComponents.u, 2) + Math.pow(vectorComponents.v, 2));
     }
 
-    public static VectorComponents breakdownVectorComponents(double angleInRadians, double vectorLength) {
+    public static VectorComponents breakdownVectorComponents(double angleInRadians,
+            double vectorLength) {
         final double u = vectorLength * Math.sin(angleInRadians);
         final double v = vectorLength * Math.cos(angleInRadians);
         return new VectorComponents(u, v);
@@ -88,8 +91,8 @@ public class Utils {
      *
      * @param origin      punkt początkowy
      * @param destination punkt docelowy
-     * @return kąt pomiędzy kierunkiem północy (rzeczywistej) a diametralną jednostki płynącej
-     * po ortodromie z punktu początkowego do docelowego w radianach
+     * @return kąt pomiędzy kierunkiem północy (rzeczywistej) a diametralną jednostki płynącej po
+     * ortodromie z punktu początkowego do docelowego w radianach
      */
     public static double calculateCourseToSteer(Coordinates origin, Coordinates destination) {
 
@@ -125,14 +128,16 @@ public class Utils {
      *
      * @param origin      punkt początkowy
      * @param destination punkt docelowy
-     * @return kąt pomiędzy kierunkiem północy (rzeczywistej) a diametralną jednostki płynącej
-     * po ortodromie z punktu początkowego do docelowego w radianach
+     * @return kąt pomiędzy kierunkiem północy (rzeczywistej) a diametralną jednostki płynącej po
+     * ortodromie z punktu początkowego do docelowego w radianach
      */
     public static double calculateInitialBearing(Coordinates origin, Coordinates destination) {
         //todo fix it
-        double y = Math.sin(destination.longitude - destination.latitude) * Math.cos(destination.latitude);
-        double x = Math.cos(origin.latitude) * Math.sin(destination.latitude) -
-                Math.sin(origin.latitude) * Math.cos(destination.latitude) * Math.cos(destination.longitude - destination.latitude);
+        double y = Math.sin(destination.longitude - destination.latitude) * Math.cos(
+                destination.latitude);
+        double x = Math.cos(origin.latitude) * Math.sin(destination.latitude)
+                   - Math.sin(origin.latitude) * Math.cos(destination.latitude) * Math.cos(
+                destination.longitude - destination.latitude);
         return Math.atan2(y, x);
     }
 

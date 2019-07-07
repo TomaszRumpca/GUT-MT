@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 
 @RestController
-@CrossOrigin(origins="*", maxAge=3600, allowedHeaders={"x-auth-token", "x-requested-with", "x-xsrf-token", "Authentication`"})
+@CrossOrigin(origins = "*",
+             maxAge = 3600,
+             allowedHeaders = {"x-auth-token", "x-requested-with", "x-xsrf-token",
+                     "Authentication`"})
 public class AuthController {
 
     @RequestMapping(value = "user")
@@ -15,8 +18,8 @@ public class AuthController {
         return user;
     }
 
-//    @RequestMapping("/token")
-//    public Map<String,String> token(HttpSession session) {
-//        return Collections.singletonMap("token", session.getId());
-//    }
+    //    @RequestMapping("/token")
+    //    public Map<String,String> token(HttpSession session) {
+    //        return Collections.singletonMap("token", session.getId());
+    //    }
 }

@@ -2,7 +2,11 @@ package torumpca.pl.gut.tools;
 
 import torumpca.pl.gut.mt.algorithm.model.Coordinates;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -58,9 +62,9 @@ public class MaskGenerator {
                 StringBuilder csvLine = new StringBuilder();
                 //longitude - rosnie na wschod - liczba kolumn
                 for (double lon = initialLon; lon < maxLon; lon += lonStep) {
-                    final boolean locationOverTheWater = inBalticBoudns(lat, lon) ?
-                            generator.overwater(new Coordinates(lat, lon)) :
-                            false;
+                    final boolean locationOverTheWater =
+                            inBalticBoudns(lat, lon) ? generator.overwater(
+                                    new Coordinates(lat, lon)) : false;
                     final String overTheWaterStr = locationOverTheWater ? "1" : "0";
                     if (j == 0) {
                         csvLine.append(overTheWaterStr);
@@ -83,9 +87,9 @@ public class MaskGenerator {
 
     }
 
-    private static boolean inBalticBoudns(double latitide, double longitude){
-        if(latitide > BALTIC_MIN_LAT && latitide < BALTIC_MAX_LAT){
-            if(longitude > BALTIC_MIN_LON && longitude < BALTIC_MAX_LON){
+    private static boolean inBalticBoudns(double latitide, double longitude) {
+        if (latitide > BALTIC_MIN_LAT && latitide < BALTIC_MAX_LAT) {
+            if (longitude > BALTIC_MIN_LON && longitude < BALTIC_MAX_LON) {
                 return true;
             }
         }
@@ -115,9 +119,9 @@ public class MaskGenerator {
 
     private boolean overwater(Coordinates coords) throws IOException {
 
-        String url = MessageFormat
-                .format(GOOGLE_REVERSE_GEO_SERVICE_URL_PATTERN, coords.getLatitude().toString(),
-                        coords.getLongitude().toString(), GOOGLE_MAPS_GEOCODING_API_KEY);
+        String url = MessageFormat.format(GOOGLE_REVERSE_GEO_SERVICE_URL_PATTERN,
+                coords.getLatitude().toString(), coords.getLongitude().toString(),
+                GOOGLE_MAPS_GEOCODING_API_KEY);
 
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -142,7 +146,7 @@ public class MaskGenerator {
         //print result
         System.out.println(
                 "LAT: " + coords.latitude + ", LON: " + coords.longitude + ", Response string: '"
-                        + response.toString() + "'");
+                + response.toString() + "'");
         return response.toString().contains("ZERO_RESULTS");
     }
 

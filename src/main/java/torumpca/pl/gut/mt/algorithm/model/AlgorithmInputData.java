@@ -1,9 +1,8 @@
 package torumpca.pl.gut.mt.algorithm.model;
 
-import torumpca.pl.gut.mt.algorithm.ship.SampleCraft;
 import torumpca.pl.gut.mt.algorithm.Craft;
+import torumpca.pl.gut.mt.algorithm.ship.SampleCraft;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 /**

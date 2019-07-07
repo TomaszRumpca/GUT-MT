@@ -67,46 +67,40 @@ public class QueryLab extends JFrame {
     }
 
     private void fillDataMenu(JMenu dataMenu) {
-        dataMenu.add(
-                new SafeAction("Get features") {
-                    public void action(ActionEvent e) throws Throwable {
-                        filterFeatures();
-                    }
-                });
-        dataMenu.add(
-                new SafeAction("Count") {
-                    public void action(ActionEvent e) throws Throwable {
-                        countFeatures();
-                    }
-                });
-        dataMenu.add(
-                new SafeAction("Geometry") {
-                    public void action(ActionEvent e) throws Throwable {
-                        queryFeatures();
-                    }
-                });
+        dataMenu.add(new SafeAction("Get features") {
+            public void action(ActionEvent e) throws Throwable {
+                filterFeatures();
+            }
+        });
+        dataMenu.add(new SafeAction("Count") {
+            public void action(ActionEvent e) throws Throwable {
+                countFeatures();
+            }
+        });
+        dataMenu.add(new SafeAction("Geometry") {
+            public void action(ActionEvent e) throws Throwable {
+                queryFeatures();
+            }
+        });
     }
 
     private void fillFileMenu(JMenu fileMenu) {
-        fileMenu.add(
-                new SafeAction("Open shapefile...") {
-                    public void action(ActionEvent e) throws Throwable {
-                        connect(new ShapefileDataStoreFactory());
-                    }
-                });
-        fileMenu.add(
-                new SafeAction("Connect to DataStore...") {
-                    public void action(ActionEvent e) throws Throwable {
-                        connect(null);
-                    }
-                });
+        fileMenu.add(new SafeAction("Open shapefile...") {
+            public void action(ActionEvent e) throws Throwable {
+                connect(new ShapefileDataStoreFactory());
+            }
+        });
+        fileMenu.add(new SafeAction("Connect to DataStore...") {
+            public void action(ActionEvent e) throws Throwable {
+                connect(null);
+            }
+        });
         fileMenu.addSeparator();
-        fileMenu.add(
-                new SafeAction("Exit") {
-                    public void action(ActionEvent e) throws Throwable {
-                        System.exit(0);
-                    }
-                });
+        fileMenu.add(new SafeAction("Exit") {
+            public void action(ActionEvent e) throws Throwable {
+                System.exit(0);
+            }
+        });
     }
 
     private void connect(DataStoreFactorySpi format) throws Exception {
@@ -159,7 +153,7 @@ public class QueryLab extends JFrame {
 
         Filter filter = CQL.toFilter(text.getText());
 
-        Query query = new Query(typeName, filter, new String[] {name});
+        Query query = new Query(typeName, filter, new String[]{name});
 
         SimpleFeatureCollection features = source.getFeatures(query);
 

@@ -34,15 +34,19 @@ public class AStarResolver implements ProblemResolver {
     @Autowired
     public AStarResolver(List<Mask> masks) {
         this.masks = masks;
-        //TODO powinna uwzględniać ograniczenia dotyczące maksymalnej prędkości wiatru oraz jego maksymalnych podmuchów
-        List<String> registeredMasks = masks.stream().map(mask -> mask.getClass().getCanonicalName()).collect(Collectors.toList());
+        //TODO powinna uwzględniać ograniczenia dotyczące maksymalnej prędkości wiatru oraz jego
+        // maksymalnych podmuchów
+        List<String> registeredMasks = masks
+                .stream()
+                .map(mask -> mask.getClass().getCanonicalName())
+                .collect(Collectors.toList());
         LOG.info("registered {} masks: {}", masks.size(), registeredMasks);
     }
 
     public Solution resolve(final WindForecastModel forecast, AlgorithmInputData input) {
 
-        double lonStep = forecast.getMetaData().getLonStep() / 10;
-        double latStep = forecast.getMetaData().getLatStep() / 10;
+        double lonStep = forecast.getMetaData().getLonStep();
+        double latStep = forecast.getMetaData().getLatStep();
 
         double maxMoveDistance = Math.sqrt(lonStep * lonStep + latStep * latStep);
 
@@ -50,13 +54,17 @@ public class AStarResolver implements ProblemResolver {
         final Coordinates goalCoordinates = input.getDestination();
         final Craft craft = input.getShip();
 
-        LOG.info("Finding path from {} to {} for {} using A* algorithm", originCoordinates, goalCoordinates, craft.getClass().getCanonicalName());
+        LOG.info("Finding path from {} to {} for {} using A* algorithm", originCoordinates,
+                goalCoordinates, craft.getClass().getCanonicalName());
 
-        TransitionFunction transitionFunction = new TransitionFunction(masks, latStep, lonStep, maxMoveDistance, goalCoordinates);
+        TransitionFunction transitionFunction =
+                new TransitionFunction(masks, latStep, lonStep, maxMoveDistance, goalCoordinates);
 
-        CostFunction<Void, Coordinates, Double> costFunction = new MoveCostFunction(forecast, craft);
+        CostFunction<Void, Coordinates, Double> costFunction =
+                new MoveCostFunction(forecast, craft);
 
-        HeuristicFunction<Coordinates, Double> heuristicFunction = new HeuristicCostFunction(craft, goalCoordinates);
+        HeuristicFunction<Coordinates, Double> heuristicFunction =
+                new HeuristicCostFunction(craft, goalCoordinates);
 
         //@formatter:off
         SearchProblem<Void, Coordinates, WeightedNode<Void, Coordinates, Double>> problemDef = ProblemBuilder

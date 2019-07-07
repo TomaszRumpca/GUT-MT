@@ -32,14 +32,18 @@ public class ForecastController {
         this.adapterFactory = adapterFactory;
     }
 
-    @RequestMapping(value = "dates", method = RequestMethod.GET)
-    public List<OffsetDateTime> getForecastAvailableDates(@RequestParam(required = false) boolean cachedData) {
+    @RequestMapping(value = "dates",
+                    method = RequestMethod.GET)
+    public List<OffsetDateTime> getForecastAvailableDates(
+            @RequestParam(required = false) boolean cachedData) {
         return adapterFactory.getDataAdapter(cachedData).getForecastAvailableDates();
     }
 
-    @RequestMapping(value = "meta", method = RequestMethod.GET)
-    public WindForecastMetaData getWindForecastMetaData(@RequestParam(required = false) Integer year,
-                                                        @RequestParam(required = false) boolean cachedData) {
+    @RequestMapping(value = "meta",
+                    method = RequestMethod.GET)
+    public WindForecastMetaData getWindForecastMetaData(
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) boolean cachedData) {
         WindForecastMetaData forecastMetaData = null;
 
         final ForecastDataAdapter adapter = adapterFactory.getDataAdapter(cachedData);

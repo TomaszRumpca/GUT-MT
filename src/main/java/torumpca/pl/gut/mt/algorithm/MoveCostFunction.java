@@ -36,15 +36,22 @@ public class MoveCostFunction implements CostFunction<Void, Coordinates, Double>
             sourcePoint = forecast.getPointFromLatLon(source);
         } catch (DataNotAvailableException e) {
             LOG.trace("dta");
-            sourcePoint = new Point(0, 0);
+            return Double.MAX_VALUE;
         }
 
-        VectorComponents[][] forecastData = forecast.getForecastData();
+        final VectorComponents[][] forecastData = forecast.getForecastData();
+
+        if (sourcePoint.x >= forecast.getMetaData().latDataCount
+            || sourcePoint.y >= forecast.getMetaData().lonDataCount) {
+            LOG.info("Move from {} to {} out of available forecast data range", source,
+                    destination);
+            return Double.MAX_VALUE;
+        }
+
         final VectorComponents wind = forecastData[sourcePoint.x][sourcePoint.y];
 
-        final Double cost =
-                craft.calculateTravelCost(source, destination, wind);
-        LOG.debug("COST - from {} to {} cost {}", source, destination, cost);
+        final Double cost = craft.calculateTravelCost(source, destination, wind);
+        LOG.info("COST - from {} to {} cost {}", source, destination, cost);
         return cost;
     }
 }

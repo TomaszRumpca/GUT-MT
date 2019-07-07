@@ -16,7 +16,7 @@ public class WindForecastMetaData {
     public double leftBottomLonCoordinate;
     public double lonStep;
 
-    public WindForecastMetaData(){
+    public WindForecastMetaData() {
 
     }
 

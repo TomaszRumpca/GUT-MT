@@ -57,8 +57,13 @@ public class AStarResolver implements ProblemResolver {
         LOG.info("Finding path from {} to {} for {} using A* algorithm", originCoordinates,
                 goalCoordinates, craft.getClass().getCanonicalName());
 
+        final Coordinates forecastStartingPoint =
+                new Coordinates(forecast.getMetaData().getLeftBottomLatCoordinate(),
+                        forecast.getMetaData().getLeftBottomLonCoordinate());
+
         TransitionFunction transitionFunction =
-                new TransitionFunction(masks, latStep, lonStep, maxMoveDistance, goalCoordinates);
+                new TransitionFunction(masks, latStep, lonStep, maxMoveDistance, goalCoordinates,
+                        forecastStartingPoint);
 
         CostFunction<Void, Coordinates, Double> costFunction =
                 new MoveCostFunction(forecast, craft);

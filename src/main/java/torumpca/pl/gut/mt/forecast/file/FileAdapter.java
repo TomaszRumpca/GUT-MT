@@ -33,6 +33,18 @@ public class FileAdapter extends AbstractKsgMetAdapter {
     private static final Map<Integer, CachedForecast> forecastFiles = new HashMap<>();
 
     static {
+        forecastFiles.put(2013,
+                new CachedForecast("forecasts/current_2013.nfo", "forecasts/U_WIND_ON_10M_2013.csv",
+                        "forecasts/V_WIND_ON_10M_2013.csv"));
+        forecastFiles.put(2014,
+                new CachedForecast("forecasts/current_2014.nfo", "forecasts/U_WIND_ON_10M_2014.csv",
+                        "forecasts/V_WIND_ON_10M_2014.csv"));
+        forecastFiles.put(2015,
+                new CachedForecast("forecasts/current_2015.nfo", "forecasts/U_WIND_ON_10M_2015.csv",
+                        "forecasts/V_WIND_ON_10M_2015.csv"));
+        forecastFiles.put(2016,
+                new CachedForecast("forecasts/current_2016.nfo", "forecasts/U_WIND_ON_10M_2016.csv",
+                        "forecasts/V_WIND_ON_10M_2016.csv"));
         forecastFiles.put(2017,
                 new CachedForecast("forecasts/current_2017.nfo", "forecasts/U_WIND_ON_10M_2017.csv",
                         "forecasts/V_WIND_ON_10M_2017.csv"));
@@ -45,6 +57,12 @@ public class FileAdapter extends AbstractKsgMetAdapter {
         forecastFiles.put(2020,
                 new CachedForecast("forecasts/current_2020.nfo", "forecasts/U_WIND_ON_10M_2020.csv",
                         "forecasts/V_WIND_ON_10M_2020.csv"));
+        forecastFiles.put(2021,
+                new CachedForecast("forecasts/current_2021.nfo", "forecasts/U_WIND_ON_10M_2021.csv",
+                        "forecasts/V_WIND_ON_10M_2021.csv"));
+        forecastFiles.put(2022,
+                new CachedForecast("forecasts/current_2022.nfo", "forecasts/U_WIND_ON_10M_2022.csv",
+                        "forecasts/V_WIND_ON_10M_2022.csv"));
     }
 
     private final static Logger LOG = LoggerFactory.getLogger(FileAdapter.class);

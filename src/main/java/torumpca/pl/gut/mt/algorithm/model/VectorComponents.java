@@ -19,4 +19,12 @@ public class VectorComponents {
     public String toString() {
         return MessageFormat.format("[u:{0},v:{1}]", u, v);
     }
+
+    public double getU() {
+        return u;
+    }
+
+    public double getV() {
+        return v;
+    }
 }
